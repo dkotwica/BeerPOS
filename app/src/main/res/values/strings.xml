@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">BeerPOS</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_sale">Sale</string>
+    <string name="title_activity_stats">Stats</string>
+</resources>
