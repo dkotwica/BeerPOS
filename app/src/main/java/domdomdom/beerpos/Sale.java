@@ -21,12 +21,19 @@ public class Sale extends MainActivity {
     ArrayAdapter<String> adapter;
     EditText editText;
     ArrayList<String> itemList;
+    ArrayList<Integer> tabAmount;
+    ArrayList<String> openTabs = new ArrayList<String>();
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale);
-        String[] items={"Apple","Banana","Clementine"};
+        String[] items={"Open Tabs"};
         itemList=new ArrayList<String>(Arrays.asList(items));
-        adapter=new ArrayAdapter<String>(this,R.layout.list_item,R.id.txtview,itemList);
+        tabAmount=new ArrayList<Integer>();
+        tabAmount.add(0);
+        openTabs.add("test");
+        adapter=new ArrayAdapter<String>(this,R.layout.list_item,R.id.txtview,openTabs);
+        //updateTabList();
         ListView listV=(ListView)findViewById(R.id.list);
         listV.setAdapter(adapter);
         //editText=(EditText)findViewById(R.id.txtInput);
@@ -50,7 +57,11 @@ public class Sale extends MainActivity {
                         //OR
                         String newItem = input.getText().toString();
                         itemList.add(newItem);
-                        adapter.notifyDataSetChanged();
+                        tabAmount.add(0);
+                        openTabs.add("test");
+
+                        updateTabList();
+                        //adapter.notifyDataSetChanged();
                     }
                 });
 
@@ -78,6 +89,17 @@ public class Sale extends MainActivity {
                 return true;
             }
         });
+    }
+
+    private void updateTabList(){
+
+        for(int i =0; i< itemList.size(); i++) {
+            openTabs.set(i, itemList.get(i) + "     " +"$" + tabAmount.get(i));
+        }
+        adapter.notifyDataSetChanged();
+
+
+
     }
     protected void removeItemFromList(int position) {
         final int deletePosition = position;
