@@ -5,18 +5,17 @@ import android.content.DialogInterface;
 //import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 
-import android.text.Editable;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
 public class Sale extends MainActivity {
     ArrayAdapter<String> adapter;
     ArrayAdapter<String> adapter1;
@@ -24,10 +23,10 @@ public class Sale extends MainActivity {
     ArrayList<String> itemList;
     ArrayList<Integer> tabAmount;
     ArrayList<String> beerName;
-    ArrayList<Integer> beerValue;
+    ArrayList<Double> beerValue;
     ArrayList<String> beerItem = new ArrayList<String>();
     ArrayList<String> openTabs = new ArrayList<String>();
-
+    String[] beerStepValues;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale);
@@ -35,7 +34,12 @@ public class Sale extends MainActivity {
         itemList=new ArrayList<String>();
         tabAmount=new ArrayList<Integer>();
         beerName=new ArrayList<String>();
-        beerValue=new ArrayList<Integer>();
+        beerValue=new ArrayList<>();
+        final String[] beerStepValues = new String[32];
+        for(int i = 0; i < beerStepValues.length; i++){
+            String number = Double.toString((double)i/2 + 1);
+            beerStepValues[i] = number;
+        }
         //tabAmount.add(0);
         //openTabs.add("test");
         adapter=new ArrayAdapter<String>(this,R.layout.list_item,R.id.txtview,openTabs);
@@ -53,19 +57,34 @@ public class Sale extends MainActivity {
             public void onClick(View v) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Sale.this);
                 final EditText input = new EditText(Sale.this);
-                alert.setView(input);
+                final NumberPicker np = new NumberPicker(Sale.this);
+                np.setWrapSelectorWheel(false);
+                np.setMinValue(1);
+                np.setMaxValue(28);
+                np.setDisplayedValues(beerStepValues);
+                np.setValue(5);
+
+                LinearLayout ll = new LinearLayout(Sale.this);
+                ll.setOrientation(LinearLayout.VERTICAL);
+                ll.addView(input);
+                ll.addView(np);
+
+                alert.setView(ll);
+
                 alert.setTitle("Add a beer");
                 alert.setMessage("Beer name:");
                 alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String newBeer = input.getText().toString();
+                        double bv = np.getValue();
                         beerName.add(newBeer);
-                        beerValue.add(0);
+                        beerValue.add(bv/2 + 0.5);
                         beerItem.add("test");
                         updateBeerList();
                     }
 
                 });
+                alert.show();
             }
         });
 
