@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <ListView
-        android:layout_width="260dp"
+        android:layout_width="154dp"
         android:layout_height="wrap_content"
         android:id="@+id/list"
          />
@@ -32,6 +32,16 @@
         android:text="OpenTab"
         android:id="@+id/openTab"
          />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="EditBeer"
+        android:id="@+id/editBeer"/>
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/beerList"
+    />
 
     <!--<SeekBar
         android:layout_width="200dp"
