@@ -141,9 +141,6 @@ public class Sale extends MainActivity {
             openTabs.set(i, itemList.get(i) + "     " +"$" + tabAmount.get(i));
         }
         adapter.notifyDataSetChanged();
-
-
-
     }
     protected void removeItemFromList(int position) {
         final int deletePosition = position;
