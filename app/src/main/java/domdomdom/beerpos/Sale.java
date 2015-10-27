@@ -27,11 +27,11 @@ public class Sale extends MainActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale);
-        String[] items={"Open Tabs"};
-        itemList=new ArrayList<String>(Arrays.asList(items));
+        //String[] items={"Open Tabs"};
+        itemList=new ArrayList<String>();
         tabAmount=new ArrayList<Integer>();
-        tabAmount.add(0);
-        openTabs.add("test");
+        //tabAmount.add(0);
+        //openTabs.add("test");
         adapter=new ArrayAdapter<String>(this,R.layout.list_item,R.id.txtview,openTabs);
         //updateTabList();
         ListView listV=(ListView)findViewById(R.id.list);
@@ -97,9 +97,6 @@ public class Sale extends MainActivity {
             openTabs.set(i, itemList.get(i) + "     " +"$" + tabAmount.get(i));
         }
         adapter.notifyDataSetChanged();
-
-
-
     }
     protected void removeItemFromList(int position) {
         final int deletePosition = position;
