@@ -21,7 +21,7 @@ public class Sale extends MainActivity {
     ArrayAdapter<String> adapter1;
     EditText editText;
     ArrayList<String> itemList;
-    ArrayList<Integer> tabAmount;
+    ArrayList<Double> tabAmount;
     ArrayList<String> beerName;
     ArrayList<Double> beerValue;
     ArrayList<Integer> beerClicks;
@@ -34,7 +34,7 @@ public class Sale extends MainActivity {
         setContentView(R.layout.activity_sale);
         //String[] items={"Open Tabs"};
         itemList=new ArrayList<String>();
-        tabAmount=new ArrayList<Integer>();
+        tabAmount=new ArrayList<Double>();
         beerName=new ArrayList<String>();
         beerValue=new ArrayList<>();
         beerClicks = new ArrayList<>();
@@ -122,7 +122,7 @@ public class Sale extends MainActivity {
                         //OR
                         String newItem = input.getText().toString();
                         itemList.add(newItem);
-                        tabAmount.add(0);
+                        tabAmount.add((double)0);
                         openTabs.add("test");
 
                         updateTabList();
@@ -197,12 +197,18 @@ public class Sale extends MainActivity {
             }
         });
         alert.setNeutralButton("Add to Tab", new DialogInterface.OnClickListener() {
-                    @Override
-                public void onClick(DialogInterface dialog, int which){
-
-
-                    }
-                });
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                double amountToAdd = 0;
+                for (int i = 0; i < beerClicks.size(); i++) {
+                    amountToAdd = amountToAdd + (beerValue.get(i) * beerClicks.get(i));
+                    beerClicks.set(i,0);
+                }
+                tabAmount.set(deletePosition, (tabAmount.get(deletePosition) + amountToAdd));
+                updateTabList();
+                updateBeerList();
+            }
+        });
                 alert.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
