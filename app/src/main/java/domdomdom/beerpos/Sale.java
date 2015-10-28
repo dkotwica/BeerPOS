@@ -25,6 +25,8 @@ public class Sale extends MainActivity {
     ArrayList<Integer> tabAmount;
     ArrayList<String> beerName;
     ArrayList<Double> beerValue;
+    ArrayList<Integer> beerClicks;
+
     ArrayList<String> beerItem = new ArrayList<String>();
     ArrayList<String> openTabs = new ArrayList<String>();
     // String[] beerStepValues;
@@ -36,6 +38,7 @@ public class Sale extends MainActivity {
         tabAmount=new ArrayList<Integer>();
         beerName=new ArrayList<String>();
         beerValue=new ArrayList<>();
+        beerClicks = new ArrayList<>();
         final String[] beerStepValues = new String[32];
         for(int i = 0; i < beerStepValues.length; i++){
             String number = Double.toString((double)i/2 + 1);
@@ -54,8 +57,14 @@ public class Sale extends MainActivity {
         //editText=(EditText)findViewById(R.id.txtInput);
         Button btAdd=(Button)findViewById(R.id.openTab);
 
-        listV2.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
+        listV2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+                beerClicks.set(position, (beerClicks.get(position) + 1));
+                updateBeerList();
+            }
+        });
 
 
         btEdit.setOnClickListener(new View.OnClickListener() {
@@ -84,7 +93,12 @@ public class Sale extends MainActivity {
                         String newBeer = input.getText().toString();
                         double bv = np.getValue();
                         beerName.add(newBeer);
+
                         beerValue.add(bv / 2 + 0.5);
+
+                        beerValue.add(bv/2 + 0.5);
+                        beerClicks.add(0);
+
                         beerItem.add("test");
                         updateBeerList();
                     }
@@ -152,7 +166,7 @@ public class Sale extends MainActivity {
     private void updateBeerList(){
 
         for(int i =0; i< beerName.size(); i++) {
-            beerItem.set(i, beerName.get(i) + "     " +"$" + beerValue.get(i));
+            beerItem.set(i, beerName.get(i) + "     " +"$" + beerValue.get(i) + "  Amt: "+ beerClicks.get(i));
         }
         adapter1.notifyDataSetChanged();
 
@@ -192,6 +206,7 @@ public class Sale extends MainActivity {
         alert.setNeutralButton("Add to Tab", new DialogInterface.OnClickListener() {
                     @Override
                 public void onClick(DialogInterface dialog, int which){
+
 
                     }
                 });
