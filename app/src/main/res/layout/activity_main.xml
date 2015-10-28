@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:text="Sale"
         android:textSize="24dp"
-        android:onClick="sendSale"
+
         android:id="@+id/Sale_BUTTON"
         android:layout_gravity="center_horizontal"
         android:layout_alignParentBottom="true"

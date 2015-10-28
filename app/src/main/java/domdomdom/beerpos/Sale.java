@@ -3,6 +3,7 @@ package domdomdom.beerpos;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 //import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.view.View;
@@ -26,7 +27,7 @@ public class Sale extends MainActivity {
     ArrayList<Double> beerValue;
     ArrayList<String> beerItem = new ArrayList<String>();
     ArrayList<String> openTabs = new ArrayList<String>();
-    String[] beerStepValues;
+    // String[] beerStepValues;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale);
@@ -52,6 +53,11 @@ public class Sale extends MainActivity {
         Button btEdit=(Button)findViewById(R.id.editBeer);
         //editText=(EditText)findViewById(R.id.txtInput);
         Button btAdd=(Button)findViewById(R.id.openTab);
+
+        listV2.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+
+
         btEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,7 +84,7 @@ public class Sale extends MainActivity {
                         String newBeer = input.getText().toString();
                         double bv = np.getValue();
                         beerName.add(newBeer);
-                        beerValue.add(bv/2 + 0.5);
+                        beerValue.add(bv / 2 + 0.5);
                         beerItem.add("test");
                         updateBeerList();
                     }
@@ -200,6 +206,8 @@ public class Sale extends MainActivity {
         alert.show();
 
     }
+
+
 
 }
 
