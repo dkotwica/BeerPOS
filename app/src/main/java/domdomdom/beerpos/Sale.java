@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 //import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,7 +15,15 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
+import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class Sale extends MainActivity {
@@ -156,11 +166,116 @@ public class Sale extends MainActivity {
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        try {
+            saveSaleData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            getBeerData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void getBeerData()throws IOException {
+        Log.d("getBeerData", "Sucessfully called the getBeerData()");
+        File folder = new File(Environment.getExternalStorageDirectory()
+                + "/BeerPOS");
+
+        boolean var = false;
+        beerName.clear();
+        beerValue.clear();
+        beerClicks.clear();
+
+        itemList.clear();
+        tabAmount.clear();
+
+        beerItem.clear();
+        openTabs.clear();
+        if (folder.exists()) {
+        Log.d("getBeerData","Folder exists");
+
+            final String filenameBeers = folder.toString() + "/" + "BeerPOS_BEER.csv";
+
+            FileInputStream is = new FileInputStream(filenameBeers);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            try {
+                int index = 0;
+                String line;
+                while ((line = reader.readLine()) != null) {
+
+                    String[] RowData = line.split(",");
+                    Log.d("Beer.csv","RowData: "+RowData[0]+","+RowData[1]+","+RowData[2]);
+
+                    beerName.add(index,RowData[0]);
+                    //beerName.add("test");
+                    beerValue.add(index,Double.parseDouble(RowData[1]));
+                    //beerValue.add((double) 1);
+                    beerClicks.add(index,Integer.parseInt(RowData[2]));
+                    //beerClicks.add(0);
+                    beerItem.add("beer");
+
+                    index++;
+
+                }
+            } catch (IOException ex) {
+                // handle exception
+            } finally {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    // handle exception
+                }
+            }
+
+
+            final String filenameTabs = folder.toString() + "/" + "BeerPOS_TABS.csv";
+            FileInputStream is2 = new FileInputStream(filenameTabs);
+            BufferedReader reader2 = new BufferedReader(new InputStreamReader(is2));
+            try {
+                String line;
+                while ((line = reader2.readLine()) != null) {
+                    String[] RowData = line.split(",");
+                    itemList.add(RowData[0]);
+                    //itemList.add("Dan");
+                    tabAmount.add(Double.parseDouble(RowData[1]));
+                    //tabAmount.add((double) 0);
+                    openTabs.add("tab");
+                }
+            } catch (IOException ex) {
+                // handle exception
+            } finally {
+                try {
+                    is2.close();
+                } catch (IOException e) {
+                    // handle exception
+                }
+            }
+
+        }
+        updateBeerList();
+        updateTabList();
+    }
+
     private void updateBeerList(){
 
-        for(int i =0; i< beerName.size(); i++) {
-            beerItem.set(i, beerName.get(i) + "     " +"$" + beerValue.get(i) + "  Amt: "+ beerClicks.get(i));
-        }
+                for (int i = 0; i < beerName.size(); i++) {
+                    beerItem.set(i, beerName.get(i) + "     " + "$" + beerValue.get(i) + "  Amt: " + beerClicks.get(i));
+                    Log.d("updateBeerList_Indes", "Index: "+ i);
+
+                 }
         adapter1.notifyDataSetChanged();
 
 
@@ -220,6 +335,63 @@ public class Sale extends MainActivity {
         alert.show();
 
     }
+
+
+
+    private void saveSaleData() throws IOException {
+
+        Log.d("saveSaledata","Sucessfully called saveSaleData()");
+
+            File folder = new File(Environment.getExternalStorageDirectory()
+                    + "/BeerPOS");
+
+            boolean var = false;
+            if (!folder.exists())
+                var = folder.mkdir();
+
+           final String filenameBeers = folder.toString() + "/" + "BeerPOS_BEER.csv";
+
+
+
+        FileWriter fw = new FileWriter(filenameBeers);
+        fw.write("");
+        if(beerClicks.size()>0) {
+            for (int i = 0; i < beerClicks.size(); i++) {
+                fw.append(beerName.get(i));
+                fw.append(',');
+                fw.append(beerValue.get(i).toString());
+                fw.append(',');
+                fw.append(beerClicks.get(i).toString());
+                fw.append('\n');
+
+                Log.d("saveSaleData_fileNameBeers","Index of Beers: "+i);
+
+            }
+        }
+        fw.flush();
+        fw.close();
+
+        final String filenameTabs = folder.toString() + "/" + "BeerPOS_TABS.csv";
+
+
+
+        fw = new FileWriter(filenameTabs);
+       fw.write("");
+
+        if(itemList.size()>0) {
+            for (int i = 0; i < itemList.size(); i++) {
+
+                fw.append(itemList.get(i));
+                fw.append(',');
+                fw.append(tabAmount.get(i).toString());
+                fw.append('\n');
+            }
+        }
+        fw.flush();
+        fw.close();
+
+    }
+
 
 }
 
