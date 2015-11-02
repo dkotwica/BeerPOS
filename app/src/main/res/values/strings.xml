@@ -5,4 +5,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_sale">Sale</string>
     <string name="title_activity_stats">Stats</string>
+    <string name="title_activity_multiple_choice">multipleChoice</string>
+    <string name="title_activity_result">Result</string>
 </resources>

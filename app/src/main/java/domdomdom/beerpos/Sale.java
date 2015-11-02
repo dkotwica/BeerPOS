@@ -1,8 +1,12 @@
 package domdomdom.beerpos;
 
+/*
+http://sandboxapi.ihealthlabs.com/OpenApiV2/OAuthv2/userauthorization/
+*/
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 //import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.os.Environment;
@@ -38,7 +42,7 @@ public class Sale extends MainActivity {
 
     ArrayList<String> beerItem = new ArrayList<String>();
     ArrayList<String> openTabs = new ArrayList<String>();
-    String[] beerStepValues;
+    // String[] beerStepValues;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale);
@@ -66,6 +70,7 @@ public class Sale extends MainActivity {
         //editText=(EditText)findViewById(R.id.txtInput);
         Button btAdd=(Button)findViewById(R.id.openTab);
 
+
         listV2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
@@ -73,6 +78,7 @@ public class Sale extends MainActivity {
                 updateBeerList();
             }
         });
+
 
         btEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,7 +106,7 @@ public class Sale extends MainActivity {
                         String newBeer = input.getText().toString();
                         double bv = np.getValue();
                         beerName.add(newBeer);
-                        beerValue.add(bv/2 + 0.5);
+                        beerValue.add(bv / 2 + 0.5);
                         beerClicks.add(0);
                         beerItem.add("test");
                         updateBeerList();
@@ -132,7 +138,7 @@ public class Sale extends MainActivity {
                         //OR
                         String newItem = input.getText().toString();
                         itemList.add(newItem);
-                        tabAmount.add((double)0);
+                        tabAmount.add((double) 0);
                         openTabs.add("test");
 
                         updateTabList();
@@ -140,7 +146,7 @@ public class Sale extends MainActivity {
                     }
                 });
 
-                alert.setNegativeButton("No Option", new DialogInterface.OnClickListener() {
+                alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // what ever you want to do with No option.
                     }
@@ -154,6 +160,18 @@ public class Sale extends MainActivity {
             }
 
         });
+        listV2.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            // setting onItemLongClickListener and passing the position to the function
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                           int position, long arg3) {
+                removeItemFromList2(position);
+
+                return true;
+            }
+        });
+
+
         listV.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             // setting onItemLongClickListener and passing the position to the function
             @Override
@@ -285,9 +303,44 @@ public class Sale extends MainActivity {
     private void updateTabList(){
 
         for(int i =0; i< itemList.size(); i++) {
-            openTabs.set(i, itemList.get(i) + "     " +"$" + tabAmount.get(i));
+            openTabs.set(i, itemList.get(i) + "     " + "$" + tabAmount.get(i));
         }
         adapter.notifyDataSetChanged();
+    }
+    protected void removeItemFromList2(int position) {
+        final int deletePosition2 = position;
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(
+                Sale.this);
+
+        alert.setTitle("Delete");
+        alert.setMessage("Do you want delete this item?");
+        alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TOD O Auto-generated method stub
+
+                // main code on after clicking yes
+                beerItem.remove(deletePosition2);
+                beerValue.remove(deletePosition2);
+                beerName.remove(deletePosition2);
+                beerClicks.remove(deletePosition2);
+                adapter1.notifyDataSetChanged();
+                adapter1.notifyDataSetInvalidated();
+
+            }
+        });
+
+        alert.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+                dialog.dismiss();
+            }
+        });
+
+        alert.show();
+
     }
     protected void removeItemFromList(int position) {
         final int deletePosition = position;
@@ -338,9 +391,10 @@ public class Sale extends MainActivity {
 
 
 
+
     private void saveSaleData() throws IOException {
 
-        Log.d("saveSaledata","Sucessfully called saveSaleData()");
+
 
             File folder = new File(Environment.getExternalStorageDirectory()
                     + "/BeerPOS");
@@ -364,7 +418,7 @@ public class Sale extends MainActivity {
                 fw.append(beerClicks.get(i).toString());
                 fw.append('\n');
 
-                Log.d("saveSaleData_fileNameBeers","Index of Beers: "+i);
+
 
             }
         }
@@ -391,6 +445,7 @@ public class Sale extends MainActivity {
         fw.close();
 
     }
+
 
 
 }
