@@ -1,5 +1,8 @@
 package domdomdom.beerpos;
 
+/*
+http://sandboxapi.ihealthlabs.com/OpenApiV2/OAuthv2/userauthorization/
+*/
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 //import android.support.v7.app.ActionBarActivity;
@@ -93,12 +96,8 @@ public class Sale extends MainActivity {
                         String newBeer = input.getText().toString();
                         double bv = np.getValue();
                         beerName.add(newBeer);
-
                         beerValue.add(bv / 2 + 0.5);
-
-                        beerValue.add(bv/2 + 0.5);
                         beerClicks.add(0);
-
                         beerItem.add("test");
                         updateBeerList();
                     }
@@ -137,7 +136,7 @@ public class Sale extends MainActivity {
                     }
                 });
 
-                alert.setNegativeButton("No Option", new DialogInterface.OnClickListener() {
+                alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // what ever you want to do with No option.
                     }
