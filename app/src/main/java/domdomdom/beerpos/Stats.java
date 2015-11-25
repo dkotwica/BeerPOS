@@ -1,5 +1,6 @@
 package domdomdom.beerpos;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -199,11 +200,15 @@ public class Stats extends MainActivity {
 
                 try {
                     JSONObject jsonDataList = new JSONObject(json.toString());
-                    JSONObject jsonWeight = jsonDataList.getJSONObject("WeightDataList");
+                    JSONArray jsonWeight = jsonDataList.getJSONArray("WeightDataList");
 
+                    //for (int i = 0; i < jsonWeight.length(); i++) {
 
-                    String weightValue = jsonWeight.getString("WeightValue");
-                    //book.setId(jbook.getString(Book.ID));
+                    //}
+                    double weightValue = jsonWeight.getJSONObject(0).getDouble("WeightValue");
+
+                    //String weightVal = String.valueOf(weightValue);
+
                     //String weightValue = json.getString("WeightDataList");
                     //Log.d("Weight", String.valueOf(json));
                     btweight.setText("Authenticated");
