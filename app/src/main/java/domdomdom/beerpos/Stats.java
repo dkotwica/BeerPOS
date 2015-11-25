@@ -26,6 +26,8 @@ public class Stats extends MainActivity {
     //Use your own client id
     private static String CLIENT_SECRET ="1cf2be2258084120b63d9394feb8b83f";
     //Use your own client secret
+    private static String SV = "C374493A1F544AE0ACA90EA56D37C0AD";
+    private static String SC = "01857ACD59484A6C9016EF727F38B84C";
     private static String REDIRECT_URI="http://www.cise.ufl.edu/~mssz/SeniorProject/senior-F15.html";
     private static String GRANT_TYPE="authorization_code";
     private static String TOKEN_URL ="https://api.ihealthlabs.com:8443/OpenApiV2/OAuthv2/userauthorization/?";
