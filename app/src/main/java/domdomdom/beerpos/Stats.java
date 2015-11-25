@@ -34,6 +34,7 @@ public class Stats extends MainActivity {
     private static String RAPI_NAME = "OpenApiWeight+OpenApiUserInfo";
     //private static String OAUTH_SCOPE="https://www.googleapis.com/auth/urlshortener";
     //Change the Scope as you need
+    private String Token;
     WebView web;
     Button auth;
     SharedPreferences pref;
@@ -97,7 +98,7 @@ public class Stats extends MainActivity {
                     }
                 });
                 auth_dialog.show();
-                auth_dialog.setTitle("Authorize Learn2Crack");
+                auth_dialog.setTitle("BeerPOS Stats");
                 auth_dialog.setCancelable(true);
             }
         });
@@ -132,11 +133,12 @@ public class Stats extends MainActivity {
                 try {
 
                     String tok = json.getString("AccessToken");
+                    Token = tok;
                     String expire = json.getString("Expires");
                     String refresh = json.getString("RefreshToken");
                     String userid = json.getString("UserID");
 
-                    Log.d("Token Access", tok);
+                    Log.d("Token Access", Token);
                     Log.d("Expire", expire);
                     Log.d("Refresh", refresh);
                     auth.setText("Authenticated");
