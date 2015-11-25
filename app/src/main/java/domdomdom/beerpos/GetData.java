@@ -20,6 +20,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import android.util.Log;
@@ -34,25 +35,27 @@ public class GetData {
     DefaultHttpClient httpClient;
     HttpPost httpPost;
 
-    public JSONObject getweight(String address,String token,String client_id,String client_secret,String redirect_uri,String sc, String sv) {
+
+    public JSONObject getweight(String address,String client_id,String client_secret,String redirect_uri,String token,String sc, String sv) {
         // Making HTTP request
         try {
             // DefaultHttpClient
             httpClient = new DefaultHttpClient();
-            httpPost = new HttpPost(address);
+            httpPost = new HttpPost(address + "client_id="+client_id+"&client_secret="+client_secret+"&redirect_uri="+redirect_uri+"&access_token="+token+"&sc="+sc+"&sv="+sv);
 
-            params.add(new BasicNameValuePair("access_token", token));
-            params.add(new BasicNameValuePair("client_id", client_id));
-            params.add(new BasicNameValuePair("client_secret", client_secret));
-            params.add(new BasicNameValuePair("redirect_uri", redirect_uri));
-            params.add(new BasicNameValuePair("sc", sc));
-            params.add(new BasicNameValuePair("sv", sv));
-
+//            params.add(new BasicNameValuePair("client_id", client_id));
+//            params.add(new BasicNameValuePair("client_secret", client_secret));
+//            params.add(new BasicNameValuePair("redirect_uri", redirect_uri));
+//            params.add(new BasicNameValuePair("access_token", token));
+//            params.add(new BasicNameValuePair("sc", sc));
+//            params.add(new BasicNameValuePair("sv", sv));
+//            Log.d("params", String.valueOf(params));
             httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
-            httpPost.setEntity(new UrlEncodedFormEntity(params));
+//          httpPost.setEntity(new UrlEncodedFormEntity(params));
             HttpResponse httpResponse = httpClient.execute(httpPost);
             HttpEntity httpEntity = httpResponse.getEntity();
             is = httpEntity.getContent();
+            Log.d("url", String.valueOf(httpPost.getURI()));
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -61,9 +64,11 @@ public class GetData {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(
                     is, "iso-8859-1"), 8);
+            Log.d("reader", String.valueOf(reader));
             StringBuilder sb = new StringBuilder();
             String line = null;
             while ((line = reader.readLine()) != null) {
@@ -72,6 +77,7 @@ public class GetData {
             is.close();
 
             json = sb.toString();
+            Log.d("wtf", String.valueOf(sb));
             Log.e("JSONStr", json);
         } catch (Exception e) {
             e.getMessage();

@@ -32,23 +32,25 @@ public class Stats extends MainActivity {
     private static String GRANT_TYPE="authorization_code";
     private static String TOKEN_URL ="https://api.ihealthlabs.com:8443/OpenApiV2/OAuthv2/userauthorization/?";
     private static String OAUTH_URL ="https://api.ihealthlabs.com:8443/OpenApiV2/OAuthv2/userauthorization/?";
-    private static String DATA_URL = "http://sandboxapi.ihealthlabs.com/openapiv2/user/91b8a66ea4a433d8d85fa774d4b1392/weight.json/?";
+    private static String DATA_URL = "https://api.ihealthlabs.com:8443/openapiv2/user/91b8a667ea4a433d8d85fa774d4b1392/weight.json/?";
     private static String API_NAME = "OpenApiWeight+OpenApiUserInfo";
     private static String RAPI_NAME = "OpenApiWeight+OpenApiUserInfo";
     //private static String OAUTH_SCOPE="https://www.googleapis.com/auth/urlshortener";
     //Change the Scope as you need
-    private String Token;
+    private static String Token;
     WebView web;
     Button auth;
     Button btweight;
     SharedPreferences pref;
     TextView Access;
+    TextView dataList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
         pref = getSharedPreferences("AppPref", MODE_PRIVATE);
         Access =(TextView)findViewById(R.id.Access);
+        dataList = (TextView)findViewById(R.id.dataList);
         auth = (Button)findViewById(R.id.auth);
         auth.setOnClickListener(new View.OnClickListener() {
             Dialog auth_dialog;
@@ -170,7 +172,7 @@ public class Stats extends MainActivity {
     }
     private class DataGet extends AsyncTask<String, String, JSONObject> {
         private ProgressDialog pDialog;
-        //String Code;
+        //String Token;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -178,14 +180,15 @@ public class Stats extends MainActivity {
             pDialog.setMessage("Contacting Google ...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
-            // Code = pref.getString("Code", "");
+            //Token = pref.getString("access_token", "");
             pDialog.show();
         }
 
         @Override
         protected JSONObject doInBackground(String... args) {
             GetData jParser = new GetData();
-            JSONObject json = jParser.getweight(DATA_URL, Token, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SC, SV);
+            JSONObject json = jParser.getweight(DATA_URL,CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, Token, SC, SV);
+            Log.d("get data", CLIENT_ID);
             return json;
         }
 
@@ -195,11 +198,16 @@ public class Stats extends MainActivity {
             if (json != null){
 
                 try {
+                    JSONObject jsonDataList = new JSONObject(json.toString());
+                    JSONObject jsonWeight = jsonDataList.getJSONObject("WeightDataList");
 
-                    String weightValue = json.getString("WeightValue");
 
+                    String weightValue = jsonWeight.getString("WeightValue");
+                    //book.setId(jbook.getString(Book.ID));
+                    //String weightValue = json.getString("WeightDataList");
+                    //Log.d("Weight", String.valueOf(json));
                     btweight.setText("Authenticated");
-                    Access.setText("Weight Value:"+weightValue);
+                    dataList.setText("Weight Value:"+weightValue);
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
