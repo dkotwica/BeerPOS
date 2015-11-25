@@ -34,18 +34,19 @@ public class GetData {
     DefaultHttpClient httpClient;
     HttpPost httpPost;
 
-    public JSONObject getweight(String address,String token,String client_id,String client_secret,String redirect_uri,String grant_type) {
+    public JSONObject getweight(String address,String token,String client_id,String client_secret,String redirect_uri,String sc, String sv) {
         // Making HTTP request
         try {
             // DefaultHttpClient
             httpClient = new DefaultHttpClient();
             httpPost = new HttpPost(address);
 
-            params.add(new BasicNameValuePair("code", token));
+            params.add(new BasicNameValuePair("access_token", token));
             params.add(new BasicNameValuePair("client_id", client_id));
             params.add(new BasicNameValuePair("client_secret", client_secret));
             params.add(new BasicNameValuePair("redirect_uri", redirect_uri));
-            params.add(new BasicNameValuePair("grant_type", grant_type));
+            params.add(new BasicNameValuePair("sc", sc));
+            params.add(new BasicNameValuePair("sv", sv));
 
             httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
             httpPost.setEntity(new UrlEncodedFormEntity(params));
