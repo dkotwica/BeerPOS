@@ -201,18 +201,21 @@ public class Stats extends MainActivity {
                 try {
                     JSONObject jsonDataList = new JSONObject(json.toString());
                     JSONArray jsonWeight = jsonDataList.getJSONArray("WeightDataList");
+                    double weightValue = 0;
 
-                    //for (int i = 0; i < jsonWeight.length(); i++) {
-
-                    //}
-                    double weightValue = jsonWeight.getJSONObject(0).getDouble("WeightValue");
+                    for (int i = 0; i < jsonWeight.length(); i++) {
+                        double weightCounter = jsonWeight.getJSONObject(i).getDouble("WeightValue");
+                        weightValue = weightValue+=weightCounter;
+                        dataList.setText("Weight Value:"+weightValue/(i+1));
+                    }
+                    //double weightValue = jsonWeight.getJSONObject(0).getDouble("WeightValue");
 
                     //String weightVal = String.valueOf(weightValue);
 
                     //String weightValue = json.getString("WeightDataList");
                     //Log.d("Weight", String.valueOf(json));
                     btweight.setText("Authenticated");
-                    dataList.setText("Weight Value:"+weightValue);
+                    //dataList.setText("Weight Value:"+weightValue);
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
