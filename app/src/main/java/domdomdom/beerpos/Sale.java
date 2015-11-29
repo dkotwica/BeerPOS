@@ -304,7 +304,7 @@ public class Sale extends MainActivity {
         updateTabList();
     }
 
-    private void updateBeerList(){
+    public void updateBeerList(){
                 beerItem.clear();
                 for (int i = 0; i < beerName.size(); i++) {
                     if(beerOnTap.get(i) == true) {
