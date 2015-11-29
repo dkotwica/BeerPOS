@@ -80,6 +80,7 @@ public class Sale extends MainActivity {
         });
 
 
+
         btEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -370,7 +371,7 @@ public class Sale extends MainActivity {
                 double amountToAdd = 0;
                 for (int i = 0; i < beerClicks.size(); i++) {
                     amountToAdd = amountToAdd + (beerValue.get(i) * beerClicks.get(i));
-                    beerClicks.set(i,0);
+                    beerClicks.set(i, 0);
                 }
                 tabAmount.set(deletePosition, (tabAmount.get(deletePosition) + amountToAdd));
                 updateTabList();
@@ -445,8 +446,14 @@ public class Sale extends MainActivity {
         fw.close();
 
     }
-
+    public void sendBeerMenu(View view) {
+        Intent intent = new Intent(this, beerMenu.class);
+        startActivity(intent);
+    }
 
 
 }
+
+
+
 

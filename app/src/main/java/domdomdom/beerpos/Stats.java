@@ -128,7 +128,7 @@ public class Stats extends MainActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(Stats.this);
-            pDialog.setMessage("Contacting Google ...");
+            pDialog.setMessage("Contacting iHealth ...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             Code = pref.getString("Code", "");
@@ -158,8 +158,8 @@ public class Stats extends MainActivity {
                     Log.d("Token Access", Token);
                     Log.d("Expire", expire);
                     Log.d("Refresh", refresh);
-                    auth.setText("Authenticated");
-                    Access.setText("Access Token:"+tok+'\n'+"Expires:"+expire+'\n'+"Refresh Token:"+refresh+'\n'+"User ID: "+userid);
+                    auth.setText("Retrieved");
+                    //Access.setText("Access Token:"+tok+'\n'+"Expires:"+expire+'\n'+"Refresh Token:"+refresh+'\n'+"User ID: "+userid);
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -178,7 +178,7 @@ public class Stats extends MainActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(Stats.this);
-            pDialog.setMessage("Contacting Google ...");
+            pDialog.setMessage("Contacting iHealth ...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             //Token = pref.getString("access_token", "");
@@ -214,7 +214,7 @@ public class Stats extends MainActivity {
 
                     //String weightValue = json.getString("WeightDataList");
                     //Log.d("Weight", String.valueOf(json));
-                    btweight.setText("Authenticated");
+                    btweight.setText("Updated");
                     //dataList.setText("Weight Value:"+weightValue);
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block

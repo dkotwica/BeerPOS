@@ -49,11 +49,18 @@
         android:layout_height="wrap_content"
         android:text="EditBeer"
         android:id="@+id/editBeer"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Beer Menu"
+            android:onClick="sendBeerMenu"
+            android:id="@+id/beerMenu"/>
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/beerList"
  />
+
 
         </LinearLayout>
 
