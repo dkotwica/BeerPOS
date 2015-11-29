@@ -78,8 +78,17 @@ public class Sale extends MainActivity {
         listV2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                beerClicks.set(position, (beerClicks.get(position) + 1));
-                updateBeerList();
+                for (int i =0; i<beerClicks.size(); i++) {
+                    int onTap = -1;
+                    if(beerOnTap.get(i) == true ) {
+                        onTap++;
+                    }
+                    if (onTap == position){
+                        beerClicks.set(i, (beerClicks.get(i) + 1));
+                        updateBeerList();
+                        break;
+                    }
+                }
             }
         });
 
@@ -319,16 +328,27 @@ public class Sale extends MainActivity {
         AlertDialog.Builder alert = new AlertDialog.Builder(
                 Sale.this);
 
-        alert.setTitle("Delete");
-        alert.setMessage("Do you want delete this item?");
+        alert.setTitle("Remove from Tap");
+        alert.setMessage("Do you want remove this item from Tap?");
         alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // TOD O Auto-generated method stub
+                for (int i =0; i<beerClicks.size(); i++) {
+                    int onTap = -1;
+                    if(beerOnTap.get(i) == true ) {
+                        onTap++;
+                    }
+                    if (onTap == deletePosition2){
 
+                        beerClicks.set(i,0);
+                        beerOnTap.set(i, false);
+                        updateBeerList();
+                        break;
+                    }
+                }
                 // main code on after clicking yes
-                beerClicks.set(deletePosition2,0);
-                beerOnTap.set(deletePosition2,false);
+
                 adapter1.notifyDataSetChanged();
                 adapter1.notifyDataSetInvalidated();
 
