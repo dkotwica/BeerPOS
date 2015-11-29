@@ -28,6 +28,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Writer;
 import java.util.ArrayList;
 
 public class Sale extends MainActivity {
@@ -37,6 +38,8 @@ public class Sale extends MainActivity {
     ArrayList<String> itemList;
     ArrayList<Double> tabAmount;
     ArrayList<String> beerName;
+    ArrayList<Boolean> beerOnTap;
+
     ArrayList<Double> beerValue;
     ArrayList<Integer> beerClicks;
 
@@ -52,6 +55,7 @@ public class Sale extends MainActivity {
         beerName=new ArrayList<String>();
         beerValue=new ArrayList<>();
         beerClicks = new ArrayList<>();
+        beerOnTap = new ArrayList<>();
         final String[] beerStepValues = new String[32];
         for(int i = 0; i < beerStepValues.length; i++){
             String number = Double.toString((double)i/2 + 1);
@@ -74,8 +78,17 @@ public class Sale extends MainActivity {
         listV2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                beerClicks.set(position, (beerClicks.get(position) + 1));
-                updateBeerList();
+                for (int i =0; i<beerClicks.size(); i++) {
+                    int onTap = -1;
+                    if(beerOnTap.get(i) == true ) {
+                        onTap++;
+                    }
+                    if (onTap == position){
+                        beerClicks.set(i, (beerClicks.get(i) + 1));
+                        updateBeerList();
+                        break;
+                    }
+                }
             }
         });
 
@@ -110,6 +123,7 @@ public class Sale extends MainActivity {
                         beerValue.add(bv / 2 + 0.5);
                         beerClicks.add(0);
                         beerItem.add("test");
+                        beerOnTap.add(true);
                         updateBeerList();
                     }
 
@@ -217,6 +231,7 @@ public class Sale extends MainActivity {
         beerName.clear();
         beerValue.clear();
         beerClicks.clear();
+        beerOnTap.clear();
 
         itemList.clear();
         tabAmount.clear();
@@ -236,7 +251,7 @@ public class Sale extends MainActivity {
                 while ((line = reader.readLine()) != null) {
 
                     String[] RowData = line.split(",");
-                    Log.d("Beer.csv","RowData: "+RowData[0]+","+RowData[1]+","+RowData[2]);
+                    Log.d("Beer.csv","RowData: "+RowData[0]+","+RowData[1]+","+RowData[2]+","+RowData[3]);
 
                     beerName.add(index,RowData[0]);
                     //beerName.add("test");
@@ -244,6 +259,7 @@ public class Sale extends MainActivity {
                     //beerValue.add((double) 1);
                     beerClicks.add(index,Integer.parseInt(RowData[2]));
                     //beerClicks.add(0);
+                    beerOnTap.add(index,Boolean.valueOf(RowData[3]));
                     beerItem.add("beer");
 
                     index++;
@@ -289,16 +305,15 @@ public class Sale extends MainActivity {
     }
 
     private void updateBeerList(){
-
+                beerItem.clear();
                 for (int i = 0; i < beerName.size(); i++) {
-                    beerItem.set(i, beerName.get(i) + "     " + "$" + beerValue.get(i) + "  Amt: " + beerClicks.get(i));
-                    Log.d("updateBeerList_Indes", "Index: "+ i);
+                    if(beerOnTap.get(i) == true) {
+                        beerItem.add(beerName.get(i) + "     " + "$" + beerValue.get(i) + "  Amt: " + beerClicks.get(i));
+                        Log.d("updateBeerList_Indes", "Index: " + i);
+                    }
 
                  }
         adapter1.notifyDataSetChanged();
-
-
-
     }
 
     private void updateTabList(){
@@ -314,18 +329,27 @@ public class Sale extends MainActivity {
         AlertDialog.Builder alert = new AlertDialog.Builder(
                 Sale.this);
 
-        alert.setTitle("Delete");
-        alert.setMessage("Do you want delete this item?");
+        alert.setTitle("Remove from Tap");
+        alert.setMessage("Do you want remove this item from Tap?");
         alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // TOD O Auto-generated method stub
+                for (int i =0; i<beerClicks.size(); i++) {
+                    int onTap = -1;
+                    if(beerOnTap.get(i) == true ) {
+                        onTap++;
+                    }
+                    if (onTap == deletePosition2){
 
+                        beerClicks.set(i,0);
+                        beerOnTap.set(i, false);
+                        updateBeerList();
+                        break;
+                    }
+                }
                 // main code on after clicking yes
-                beerItem.remove(deletePosition2);
-                beerValue.remove(deletePosition2);
-                beerName.remove(deletePosition2);
-                beerClicks.remove(deletePosition2);
+
                 adapter1.notifyDataSetChanged();
                 adapter1.notifyDataSetInvalidated();
 
@@ -417,10 +441,9 @@ public class Sale extends MainActivity {
                 fw.append(beerValue.get(i).toString());
                 fw.append(',');
                 fw.append(beerClicks.get(i).toString());
+                fw.append(',');
+                fw.append((beerOnTap.get(i)).toString());
                 fw.append('\n');
-
-
-
             }
         }
         fw.flush();

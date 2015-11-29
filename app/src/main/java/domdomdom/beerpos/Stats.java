@@ -118,7 +118,7 @@ public class Stats extends MainActivity {
 
 
 
-            });
+        });
     }
 
     private class TokenGet extends AsyncTask<String, String, JSONObject> {
