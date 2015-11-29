@@ -72,8 +72,9 @@ public class beerMenu extends Sale {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // TOD O Auto-generated method stub
+                int onTap = -1;
                 for (int i = 0; i < beerClicks.size(); i++) {
-                    int onTap = -1;
+
                     if (beerOnTap.get(i) == false) {
                         onTap++;
                     }

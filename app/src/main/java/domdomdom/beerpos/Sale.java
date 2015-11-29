@@ -78,8 +78,8 @@ public class Sale extends MainActivity {
         listV2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+                int onTap = -1;
                 for (int i =0; i<beerClicks.size(); i++) {
-                    int onTap = -1;
                     if(beerOnTap.get(i) == true ) {
                         onTap++;
                     }
@@ -335,8 +335,9 @@ public class Sale extends MainActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // TOD O Auto-generated method stub
+                int onTap = -1;
                 for (int i =0; i<beerClicks.size(); i++) {
-                    int onTap = -1;
+
                     if(beerOnTap.get(i) == true ) {
                         onTap++;
                     }
@@ -454,7 +455,7 @@ public class Sale extends MainActivity {
 
 
         fw = new FileWriter(filenameTabs);
-       fw.write("");
+        fw.write("");
 
         if(itemList.size()>0) {
             for (int i = 0; i < itemList.size(); i++) {
