@@ -43,15 +43,7 @@ public class GetData {
             httpClient = new DefaultHttpClient();
             httpPost = new HttpPost(address + "client_id="+client_id+"&client_secret="+client_secret+"&redirect_uri="+redirect_uri+"&access_token="+token+"&sc="+sc+"&sv="+sv);
 
-//            params.add(new BasicNameValuePair("client_id", client_id));
-//            params.add(new BasicNameValuePair("client_secret", client_secret));
-//            params.add(new BasicNameValuePair("redirect_uri", redirect_uri));
-//            params.add(new BasicNameValuePair("access_token", token));
-//            params.add(new BasicNameValuePair("sc", sc));
-//            params.add(new BasicNameValuePair("sv", sv));
-//            Log.d("params", String.valueOf(params));
             httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
-//          httpPost.setEntity(new UrlEncodedFormEntity(params));
             HttpResponse httpResponse = httpClient.execute(httpPost);
             HttpEntity httpEntity = httpResponse.getEntity();
             is = httpEntity.getContent();
