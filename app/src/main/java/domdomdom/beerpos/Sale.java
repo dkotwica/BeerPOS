@@ -364,6 +364,7 @@ public class Sale extends MainActivity {
                 dialog.dismiss();
             }
         });
+        
 
         alert.show();
 
