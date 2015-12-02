@@ -18,8 +18,13 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class Stats extends MainActivity {
 
@@ -45,10 +50,22 @@ public class Stats extends MainActivity {
     SharedPreferences pref;
     TextView Access;
     TextView dataList;
+    HashMap<String, List<String>> Bar_Category;
+    List<String> Bar_List;
+    ExpandableListView Exp_list;
+    BeerAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
+
+        Exp_list = (ExpandableListView) findViewById(R.id.exp_list);
+        Bar_Category = BeerData.getInfo();
+        Bar_List = new ArrayList<String>(Bar_Category.keySet());
+        adapter = new BeerAdapter(this, Bar_Category, Bar_List);
+        Exp_list.setAdapter(adapter);
+
         pref = getSharedPreferences("AppPref", MODE_PRIVATE);
         Access =(TextView)findViewById(R.id.Access);
         dataList = (TextView)findViewById(R.id.dataList);
@@ -119,6 +136,7 @@ public class Stats extends MainActivity {
 
 
         });
+
     }
 
     private class TokenGet extends AsyncTask<String, String, JSONObject> {

@@ -21,6 +21,8 @@ import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import com.braintreepayments.api.PaymentRequest;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -74,7 +76,26 @@ public class Sale extends MainActivity {
         //editText=(EditText)findViewById(R.id.txtInput);
         Button btAdd=(Button)findViewById(R.id.openTab);
 
+        /*listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                         @Override
+                                         public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+                                             AlertDialog.Builder alert = new AlertDialog.Builder(
+                                                     Sale.this);
 
+                                             alert.setTitle("Tab History");
+                                             alert.setMessage(null);
+                                             alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                                 @Override
+                                                 public void onClick(DialogInterface dialog, int which) {
+
+                                                     dialog.dismiss();
+
+                                                 }
+                                             });
+                                         }
+
+                                         ;
+                                     });*/
         listV2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
@@ -336,14 +357,14 @@ public class Sale extends MainActivity {
             public void onClick(DialogInterface dialog, int which) {
                 // TOD O Auto-generated method stub
                 int onTap = -1;
-                for (int i =0; i<beerClicks.size(); i++) {
+                for (int i = 0; i < beerClicks.size(); i++) {
 
-                    if(beerOnTap.get(i) == true ) {
+                    if (beerOnTap.get(i) == true) {
                         onTap++;
                     }
-                    if (onTap == deletePosition2){
+                    if (onTap == deletePosition2) {
 
-                        beerClicks.set(i,0);
+                        beerClicks.set(i, 0);
                         beerOnTap.set(i, false);
                         updateBeerList();
                         break;
@@ -365,6 +386,7 @@ public class Sale extends MainActivity {
             }
         });
 
+
         alert.show();
 
     }
@@ -379,9 +401,7 @@ public class Sale extends MainActivity {
         alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // TOD O Auto-generated method stub
 
-                // main code on after clicking yes
                 itemList.remove(deletePosition);
                 tabAmount.remove(deletePosition);
                 openTabs.remove(deletePosition);
