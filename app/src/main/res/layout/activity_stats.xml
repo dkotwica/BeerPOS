@@ -38,5 +38,25 @@
         android:textIsSelectable="true"
         android:layout_gravity="center"
         android:textSize="10sp"/>
+    <ListView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/allBeer"
+        />
+
+
+
+
+    <ExpandableListView
+        android:id="@+id/exp_list"
+        android:layout_below="@+id/directions"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
+        android:divider="#A4C739"
+
+        android:dividerHeight="1dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </LinearLayout>
