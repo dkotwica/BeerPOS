@@ -22,9 +22,11 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Stats extends MainActivity {
 
@@ -50,7 +52,7 @@ public class Stats extends MainActivity {
     SharedPreferences pref;
     TextView Access;
     TextView dataList;
-    HashMap<String, List<String>> Bar_Category;
+    Map<String, List<String>> Bar_Category;
     List<String> Bar_List;
     ExpandableListView Exp_list;
     BeerAdapter adapter;
@@ -60,8 +62,13 @@ public class Stats extends MainActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
 
+        BeerData b = new BeerData();
         Exp_list = (ExpandableListView) findViewById(R.id.exp_list);
-        Bar_Category = BeerData.getInfo();
+        try {
+            Bar_Category = b.getInfo();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Bar_List = new ArrayList<String>(Bar_Category.keySet());
         adapter = new BeerAdapter(this, Bar_Category, Bar_List);
         Exp_list.setAdapter(adapter);

@@ -2,6 +2,7 @@ package domdomdom.beerpos;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -14,10 +15,10 @@ import android.widget.TextView;
 
 public class BeerAdapter extends BaseExpandableListAdapter {
     private Context ctx;
-    private HashMap<String, List<String>> BeeryArray_Category;
+    private Map<String, List<String>> BeeryArray_Category;
     private List<String> BeerArray_List;
 
-    public BeerAdapter(Context ctx, HashMap<String, List<String>> BeeryArray_Category, List<String> BeerArray_List )
+    public BeerAdapter(Context ctx, Map<String, List<String>> BeeryArray_Category, List<String> BeerArray_List )
     {
         this.ctx = ctx;
         this.BeeryArray_Category = BeeryArray_Category;
