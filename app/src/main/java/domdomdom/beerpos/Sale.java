@@ -568,10 +568,13 @@ public class Sale extends MainActivity {
         if (requestCode == REQUEST_CODE) {
             Log.d("requestCode==REQUEST_CODE", String.valueOf(requestCode));
             Log.d("index to be removed", String.valueOf(currentPaymentTab));
+
             if(resultCode == -1) {
                 itemList.remove(currentPaymentTab);
                 tabAmount.remove(currentPaymentTab);
                 openTabs.remove(currentPaymentTab);
+                beerHistoryClick.remove(currentPaymentTab);
+                beerHistoryName.remove(currentPaymentTab);
             }
             try {
                 saveSaleData();
