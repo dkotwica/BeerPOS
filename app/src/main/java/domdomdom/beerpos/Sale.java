@@ -361,8 +361,9 @@ public class Sale extends MainActivity {
     }
 
     //public void updateHistoryList(){
-        //for (int i = 0; i < beerHistoryName.size(); i++) {
-        //}}
+      //  for (int i = 0; i < beerHistoryName.size(); i++) {
+        //}
+    //}
 
     private void updateTabList(){
 
