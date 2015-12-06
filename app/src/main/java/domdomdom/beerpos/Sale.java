@@ -23,8 +23,10 @@ import android.widget.NumberPicker;
 
 import android.widget.Toast;
 
+import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.api.BraintreePaymentActivity;
 import com.braintreepayments.api.PaymentRequest;
+import com.braintreepayments.api.exceptions.InvalidArgumentException;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 
 
@@ -61,6 +63,8 @@ public class Sale extends MainActivity {
     ArrayList<Double> beerValue;
     ArrayList<Integer> beerClicks;
 
+    BraintreeFragment braintree;
+
     ArrayList<String> beerItem = new ArrayList<String>();
     ArrayList<String> openTabs = new ArrayList<String>();
     // String[] beerStepValues;
@@ -82,6 +86,11 @@ public class Sale extends MainActivity {
         for(int i = 0; i < beerStepValues.length; i++){
             String number = Double.toString((double)i/2 + 1);
             beerStepValues[i] = number;
+        }
+        try {
+            BraintreeFragment braintree = BraintreeFragment.newInstance(Sale.this, tokenizationKey);
+        } catch (InvalidArgumentException e) {
+            e.printStackTrace();
         }
         //tabAmount.add(0);
         //openTabs.add("test");
