@@ -3,6 +3,7 @@ package domdomdom.beerpos;
 /*
 http://sandboxapi.ihealthlabs.com/OpenApiV2/OAuthv2/userauthorization/
 */
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 //import android.support.v7.app.ActionBarActivity;
@@ -21,7 +22,9 @@ import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import com.braintreepayments.api.BraintreePaymentActivity;
 import com.braintreepayments.api.PaymentRequest;
+import com.braintreepayments.api.models.PaymentMethodNonce;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,6 +37,14 @@ import java.io.Writer;
 import java.util.ArrayList;
 
 public class Sale extends MainActivity {
+
+    final static String tokenizationKey = "sandbox_qkxpfc74_6z4ry4bf4dsyhfmk";
+
+    int REQUEST_CODE = 001;
+
+    int currentPaymentTab = 0;
+
+
     ArrayAdapter<String> adapter;
     ArrayAdapter<String> adapter1;
     EditText editText;
@@ -272,7 +283,7 @@ public class Sale extends MainActivity {
                 while ((line = reader.readLine()) != null) {
 
                     String[] RowData = line.split(",");
-                    Log.d("Beer.csv","RowData: "+RowData[0]+","+RowData[1]+","+RowData[2]+","+RowData[3]);
+                   // Log.d("Beer.csv","RowData: "+RowData[0]+","+RowData[1]+","+RowData[2]+","+RowData[3]);
 
                     beerName.add(index,RowData[0]);
                     //beerName.add("test");
@@ -330,7 +341,7 @@ public class Sale extends MainActivity {
                 for (int i = 0; i < beerName.size(); i++) {
                     if(beerOnTap.get(i) == true) {
                         beerItem.add(beerName.get(i) + "     " + "$" + beerValue.get(i) + "  Amt: " + beerClicks.get(i));
-                        Log.d("updateBeerList_Indes", "Index: " + i);
+                        //Log.d("updateBeerList_Indes", "Index: " + i);
                     }
 
                  }
@@ -390,23 +401,31 @@ public class Sale extends MainActivity {
         alert.show();
 
     }
+
     protected void removeItemFromList(int position) {
         final int deletePosition = position;
 
         AlertDialog.Builder alert = new AlertDialog.Builder(
                 Sale.this);
 
-        alert.setTitle("Delete");
-        alert.setMessage("Do you want delete this item?");
-        alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+        alert.setTitle("Tab Options");
+        alert.setMessage("Edit the Tab");
+        alert.setPositiveButton("Close Out", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                itemList.remove(deletePosition);
-                tabAmount.remove(deletePosition);
-                openTabs.remove(deletePosition);
-                adapter.notifyDataSetChanged();
-                adapter.notifyDataSetInvalidated();
+                PaymentRequest paymentRequest = new PaymentRequest()
+                        .clientToken(tokenizationKey);
+                paymentRequest.primaryDescription(itemList.get(deletePosition));
+                paymentRequest.amount("$" + String.valueOf(tabAmount.get(deletePosition)));
+                startActivityForResult(paymentRequest.getIntent(Sale.this), REQUEST_CODE);
+
+                currentPaymentTab = deletePosition;
+//                itemList.remove(deletePosition);
+//                tabAmount.remove(deletePosition);
+//                openTabs.remove(deletePosition);
+//                adapter.notifyDataSetChanged();
+//                adapter.notifyDataSetInvalidated();
 
             }
         });
@@ -495,6 +514,46 @@ public class Sale extends MainActivity {
         startActivity(intent);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("requestCode", String.valueOf(requestCode));
+        Log.d("resultCode", String.valueOf(resultCode));
+        Log.d("data", String.valueOf(data));
+
+        if (requestCode == REQUEST_CODE) {
+            Log.d("requestCode==REQUEST_CODE", String.valueOf(requestCode));
+            Log.d("index to be removed", String.valueOf(currentPaymentTab));
+            itemList.remove(currentPaymentTab);
+            tabAmount.remove(currentPaymentTab);
+            openTabs.remove(currentPaymentTab);
+            try {
+                saveSaleData();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            adapter.notifyDataSetChanged();
+            adapter.notifyDataSetInvalidated();
+
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    PaymentMethodNonce paymentMethodNonce = data.getParcelableExtra(
+                            BraintreePaymentActivity.EXTRA_PAYMENT_METHOD_NONCE
+                    );
+                    String nonce = paymentMethodNonce.getNonce();
+
+
+                    break;
+                case BraintreePaymentActivity.BRAINTREE_RESULT_DEVELOPER_ERROR:
+                case BraintreePaymentActivity.BRAINTREE_RESULT_SERVER_ERROR:
+                case BraintreePaymentActivity.BRAINTREE_RESULT_SERVER_UNAVAILABLE:
+                    // handle errors here, a throwable may be available in
+                    // data.getSerializableExtra(BraintreePaymentActivity.EXTRA_ERROR_MESSAGE)
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 
 }
 
