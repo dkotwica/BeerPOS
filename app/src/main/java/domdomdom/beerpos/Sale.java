@@ -570,7 +570,7 @@ public class Sale extends MainActivity {
             tabAmount.remove(currentPaymentTab);
             openTabs.remove(currentPaymentTab);
             beerHistoryClick.remove(currentPaymentTab);
-            beerHistoryClick.remove(currentPaymentTab);
+            beerHistoryName.remove(currentPaymentTab);
             try {
                 saveSaleData();
             } catch (IOException e) {
