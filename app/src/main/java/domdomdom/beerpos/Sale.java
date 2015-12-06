@@ -34,6 +34,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Sale extends MainActivity {
@@ -55,8 +56,8 @@ public class Sale extends MainActivity {
     ArrayList<String> beerName;
     ArrayList<Boolean> beerOnTap;
     ArrayList<String> historyDisplay;
-    ArrayList<String> beerHistoryName;
-    ArrayList<Integer> beerHistoryClick;
+    ArrayList<ArrayList<Integer>> beerHistoryName;
+    ArrayList<ArrayList<Integer>> beerHistoryClick;
     ArrayList<Double> beerValue;
     ArrayList<Integer> beerClicks;
 
@@ -69,6 +70,7 @@ public class Sale extends MainActivity {
         //String[] items={"Open Tabs"};
         beerHistoryName = new ArrayList<>();
         beerHistoryClick = new ArrayList<>();
+
         historyDisplay = new ArrayList<>();
         itemList=new ArrayList<String>();
         tabAmount=new ArrayList<Double>();
@@ -112,7 +114,18 @@ public class Sale extends MainActivity {
                                              alertHistory.setView(historyLayout);
 
                                              alertHistory.setTitle("Tab History");
-                                             alertHistory.setMessage("hi");
+                                             historyDisplay.clear();
+                                             for (int i = 0; i <beerHistoryClick.get(position).size();i++) {
+                                                historyDisplay.add(beerName.get(beerHistoryName.get(position).get(i)) + " x " + beerHistoryClick.get(position).get(i));
+                                             }
+                                             alertHistory.setMessage(itemList.get(position));
+                                             alertHistory.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                                                 @Override
+                                                 public void onClick(DialogInterface dialog, int which) {
+                                                     // TODO Auto-generated method stub
+                                                     dialog.dismiss();
+                                                 }
+                                             });
                                              alertHistory.show();
 
                                          }
@@ -198,14 +211,14 @@ public class Sale extends MainActivity {
                         String newItem = input.getText().toString();
                         itemList.add(newItem);
                         tabAmount.add((double) 0);
+                        beerHistoryClick.add(tabAmount.size()-1, new ArrayList<Integer>());
+                        beerHistoryName.add(tabAmount.size()-1, new ArrayList<Integer>());
                         openTabs.add("test");
 
                         updateTabList();
                         //adapter.notifyDataSetChanged();
                     }
-                });
-
-                alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // what ever you want to do with No option.
                     }
@@ -330,6 +343,8 @@ public class Sale extends MainActivity {
                     itemList.add(RowData[0]);
                     //itemList.add("Dan");
                     tabAmount.add(Double.parseDouble(RowData[1]));
+                    beerHistoryClick.add(tabAmount.size()-1, new ArrayList<Integer>());
+                    beerHistoryName.add(tabAmount.size()-1, new ArrayList<Integer>());
                     //tabAmount.add((double) 0);
                     openTabs.add("tab");
                 }
@@ -453,8 +468,8 @@ public class Sale extends MainActivity {
                 for (int i = 0; i < beerClicks.size(); i++) {
                     amountToAdd = amountToAdd + (beerValue.get(i) * beerClicks.get(i));
                     if (beerClicks.get(i) != 0) {
-                        beerHistoryName.add(beerName.get(i));
-                        beerHistoryClick.add(beerClicks.get(i));
+                        beerHistoryName.get(deletePosition).add(i);
+                        beerHistoryClick.get(deletePosition).add(beerClicks.get(i));
                     }
                     //historyClicksDisplay = String.valueOf(beerHistoryClick);
                     beerClicks.set(i, 0);
