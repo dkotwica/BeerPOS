@@ -569,6 +569,8 @@ public class Sale extends MainActivity {
             itemList.remove(currentPaymentTab);
             tabAmount.remove(currentPaymentTab);
             openTabs.remove(currentPaymentTab);
+            beerHistoryClick.remove(currentPaymentTab);
+            beerHistoryClick.remove(currentPaymentTab);
             try {
                 saveSaleData();
             } catch (IOException e) {
