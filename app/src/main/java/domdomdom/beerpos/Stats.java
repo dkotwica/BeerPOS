@@ -46,6 +46,7 @@ public class Stats extends MainActivity {
     //private static String OAUTH_SCOPE="https://www.googleapis.com/auth/urlshortener";
     //Change the Scope as you need
     private static String Token;
+
     WebView web;
     Button auth;
     Button btweight;

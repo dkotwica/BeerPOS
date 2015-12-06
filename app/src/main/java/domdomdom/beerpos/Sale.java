@@ -19,29 +19,28 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
-import android.widget.Toast;
-
-import com.braintreepayments.api.PaymentRequest;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Writer;
 import java.util.ArrayList;
 
 public class Sale extends MainActivity {
     ArrayAdapter<String> adapter;
     ArrayAdapter<String> adapter1;
+    ArrayAdapter<String> historyNameAdapter;
+    ArrayAdapter<String> historyClicksAdapter;
     EditText editText;
     ArrayList<String> itemList;
     ArrayList<Double> tabAmount;
     ArrayList<String> beerName;
     ArrayList<Boolean> beerOnTap;
-
+    ArrayList<String> historyDisplay;
+    ArrayList<String> beerHistoryName;
+    ArrayList<Integer> beerHistoryClick;
     ArrayList<Double> beerValue;
     ArrayList<Integer> beerClicks;
 
@@ -52,6 +51,9 @@ public class Sale extends MainActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale);
         //String[] items={"Open Tabs"};
+        beerHistoryName = new ArrayList<>();
+        beerHistoryClick = new ArrayList<>();
+        historyDisplay = new ArrayList<>();
         itemList=new ArrayList<String>();
         tabAmount=new ArrayList<Double>();
         beerName=new ArrayList<String>();
@@ -67,7 +69,11 @@ public class Sale extends MainActivity {
         //openTabs.add("test");
         adapter=new ArrayAdapter<String>(this,R.layout.list_item,R.id.txtview,openTabs);
         adapter1=new ArrayAdapter<String>(this,R.layout.list_item,R.id.txtview1,beerItem);
+        historyNameAdapter = new ArrayAdapter<String>(this,R.layout.list_item, R.id.txtview, historyDisplay);
+
         //updateTabList();
+        final ListView historyList = new ListView(Sale.this);
+        historyList.setAdapter(historyNameAdapter);
         ListView listV=(ListView)findViewById(R.id.list);
         listV.setAdapter(adapter);
         ListView listV2 = (ListView)findViewById(R.id.beerList);
@@ -76,26 +82,27 @@ public class Sale extends MainActivity {
         //editText=(EditText)findViewById(R.id.txtInput);
         Button btAdd=(Button)findViewById(R.id.openTab);
 
-        /*listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                          @Override
                                          public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                                             AlertDialog.Builder alert = new AlertDialog.Builder(
+                                             AlertDialog.Builder alertHistory = new AlertDialog.Builder(
                                                      Sale.this);
 
-                                             alert.setTitle("Tab History");
-                                             alert.setMessage(null);
-                                             alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                                                 @Override
-                                                 public void onClick(DialogInterface dialog, int which) {
 
-                                                     dialog.dismiss();
+                                             LinearLayout historyLayout = new LinearLayout(Sale.this);
+                                             historyLayout.setOrientation(LinearLayout.VERTICAL);
+                                             historyLayout.addView(historyList);
 
-                                                 }
-                                             });
+                                             alertHistory.setView(historyLayout);
+
+                                             alertHistory.setTitle("Tab History");
+                                             alertHistory.setMessage("hi");
+                                             alertHistory.show();
+
                                          }
 
                                          ;
-                                     });*/
+                                     });
         listV2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
@@ -337,6 +344,10 @@ public class Sale extends MainActivity {
         adapter1.notifyDataSetChanged();
     }
 
+    //public void updateHistoryList(){
+        //for (int i = 0; i < beerHistoryName.size(); i++) {
+        //}}
+
     private void updateTabList(){
 
         for(int i =0; i< itemList.size(); i++) {
@@ -414,10 +425,22 @@ public class Sale extends MainActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 double amountToAdd = 0;
+
                 for (int i = 0; i < beerClicks.size(); i++) {
                     amountToAdd = amountToAdd + (beerValue.get(i) * beerClicks.get(i));
+                    if (beerClicks.get(i) != 0) {
+                        beerHistoryName.add(beerName.get(i));
+                        beerHistoryClick.add(beerClicks.get(i));
+                    }
+                    //historyClicksDisplay = String.valueOf(beerHistoryClick);
                     beerClicks.set(i, 0);
+
                 }
+
+
+                Log.d("Display", String.valueOf(historyDisplay));
+                Log.d("History Name", String.valueOf(beerHistoryName));
+                Log.d("History Click", String.valueOf(beerHistoryClick));
                 tabAmount.set(deletePosition, (tabAmount.get(deletePosition) + amountToAdd));
                 updateTabList();
                 updateBeerList();

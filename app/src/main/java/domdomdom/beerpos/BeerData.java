@@ -156,7 +156,7 @@ public class BeerData extends Sale {
         if (beerName.size() > 0) {
         for(int i = 0; i < beerName.size(); i++) {
             List<String> beer_name = new ArrayList<String>();
-            beer_name.add("test");
+            beer_name.add("weightValue");
             BarDetails.put(beerName.get(i), beer_name);
         }
         }
