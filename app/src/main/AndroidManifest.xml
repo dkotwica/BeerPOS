@@ -23,6 +23,7 @@
         <activity
             android:name=".Sale"
             android:label="@string/title_activity_sale"
+            android:configChanges="orientation|screenSize"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

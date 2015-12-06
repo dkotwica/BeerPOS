@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.os.Environment;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -101,38 +102,45 @@ public class Sale extends MainActivity {
         Button btAdd=(Button)findViewById(R.id.openTab);
 
         listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                         @Override
-                                         public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                                             AlertDialog.Builder alertHistory = new AlertDialog.Builder(
-                                                     Sale.this);
+            @Override
+            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+                AlertDialog.Builder alertHistory = new AlertDialog.Builder(
+                        Sale.this);
 
 
-                                             final LinearLayout historyLayout = new LinearLayout(Sale.this);
-                                             historyLayout.setOrientation(LinearLayout.VERTICAL);
-                                             historyLayout.addView(historyList);
+                final LinearLayout historyLayout = new LinearLayout(Sale.this);
+                historyLayout.setOrientation(LinearLayout.VERTICAL);
+                historyLayout.addView(historyList);
 
-                                             alertHistory.setView(historyLayout);
 
-                                             alertHistory.setTitle("Tab History");
-                                             historyDisplay.clear();
-                                             for (int i = 0; i <beerHistoryClick.get(position).size();i++) {
-                                                historyDisplay.add(beerName.get(beerHistoryName.get(position).get(i)) + " x " + beerHistoryClick.get(position).get(i));
-                                             }
-                                             alertHistory.setMessage(itemList.get(position));
-                                             alertHistory.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                                                 @Override
-                                                 public void onClick(DialogInterface dialog, int which) {
-                                                     // TODO Auto-generated method stub
-                                                     dialog.dismiss();
-                                                    historyLayout.removeView(historyList);
-                                                 }
 
-                                             });
-                                             alertHistory.show();
-                                         }
+                alertHistory.setView(historyLayout);
 
-                                         ;
-                                     });
+                alertHistory.setTitle("Tab History");
+                historyDisplay.clear();
+                for (int i = 0; i < beerHistoryClick.get(position).size(); i++) {
+                    historyDisplay.add(beerName.get(beerHistoryName.get(position).get(i)) + " x " + beerHistoryClick.get(position).get(i));
+                }
+                alertHistory.setMessage(itemList.get(position));
+                alertHistory.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO Auto-generated method stub
+                        dialog.dismiss();
+                        historyLayout.removeView(historyList);
+                    }
+
+                });
+
+                alertHistory.show();
+
+            }
+
+
+        });
+
+
+
         listV2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
