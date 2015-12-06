@@ -116,7 +116,7 @@ public class Sale extends MainActivity {
                                                      Sale.this);
 
 
-                                             LinearLayout historyLayout = new LinearLayout(Sale.this);
+                                             final LinearLayout historyLayout = new LinearLayout(Sale.this);
                                              historyLayout.setOrientation(LinearLayout.VERTICAL);
                                              historyLayout.addView(historyList);
 
@@ -133,10 +133,11 @@ public class Sale extends MainActivity {
                                                  public void onClick(DialogInterface dialog, int which) {
                                                      // TODO Auto-generated method stub
                                                      dialog.dismiss();
+                                                    historyLayout.removeView(historyList);
                                                  }
+
                                              });
                                              alertHistory.show();
-
                                          }
 
                                          ;
@@ -385,8 +386,9 @@ public class Sale extends MainActivity {
     }
 
     //public void updateHistoryList(){
-        //for (int i = 0; i < beerHistoryName.size(); i++) {
-        //}}
+      //  for (int i = 0; i < beerHistoryName.size(); i++) {
+        //}
+    //}
 
     private void updateTabList(){
 
@@ -575,11 +577,14 @@ public class Sale extends MainActivity {
         if (requestCode == REQUEST_CODE) {
             Log.d("requestCode==REQUEST_CODE", String.valueOf(requestCode));
             Log.d("index to be removed", String.valueOf(currentPaymentTab));
-            itemList.remove(currentPaymentTab);
-            tabAmount.remove(currentPaymentTab);
-            openTabs.remove(currentPaymentTab);
-            beerHistoryClick.remove(currentPaymentTab);
-            beerHistoryName.remove(currentPaymentTab);
+
+            if(resultCode == -1) {
+                itemList.remove(currentPaymentTab);
+                tabAmount.remove(currentPaymentTab);
+                openTabs.remove(currentPaymentTab);
+                beerHistoryClick.remove(currentPaymentTab);
+                beerHistoryName.remove(currentPaymentTab);
+            }
             try {
                 saveSaleData();
             } catch (IOException e) {
