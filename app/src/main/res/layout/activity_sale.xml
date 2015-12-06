@@ -12,21 +12,7 @@
         android:layout_weight="1"
         android:orientation="vertical"
         >
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+Tab"
-            android:id="@+id/button2"
-            />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CloseOut"
-            android:id="@+id/button3"
-            />
-
-        <Button
+      <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="OpenTab"
