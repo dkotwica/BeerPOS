@@ -409,11 +409,11 @@ public class Sale extends MainActivity {
                 Sale.this);
 
         alert.setTitle("Tab Options");
-        alert.setMessage("Edit the Tab");
+        //alert.setMessage("Edit the Tab");
         alert.setPositiveButton("Close Out", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                currentPaymentTab = deletePosition;
                 PaymentRequest paymentRequest = new PaymentRequest()
                         .clientToken(tokenizationKey);
                 paymentRequest.primaryDescription(itemList.get(deletePosition));
