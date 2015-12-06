@@ -133,12 +133,10 @@ public class Sale extends MainActivity {
                 });
 
                 alertHistory.show();
-
             }
 
-
+            ;
         });
-
 
 
         listV2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
