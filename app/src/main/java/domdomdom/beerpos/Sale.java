@@ -61,6 +61,9 @@ public class Sale extends MainActivity {
     ArrayList<ArrayList<Integer>> beerHistoryName;
     ArrayList<ArrayList<Integer>> beerHistoryClick;
     ArrayList<Double> beerValue;
+    ArrayList<Long> beerStart;
+    ArrayList<Long> beerEnd;
+
     ArrayList<Integer> beerClicks;
 
     BraintreeFragment braintree;
@@ -74,6 +77,9 @@ public class Sale extends MainActivity {
         //String[] items={"Open Tabs"};
         beerHistoryName = new ArrayList<>();
         beerHistoryClick = new ArrayList<>();
+
+        beerStart = new ArrayList<>();
+        beerEnd = new ArrayList<>();
 
         historyDisplay = new ArrayList<>();
         itemList=new ArrayList<String>();
@@ -110,6 +116,7 @@ public class Sale extends MainActivity {
         Button btAdd=(Button)findViewById(R.id.openTab);
 
         listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 
@@ -142,6 +149,10 @@ public class Sale extends MainActivity {
 
             ;
         });
+
+                                         
+
+
         listV2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
@@ -191,6 +202,8 @@ public class Sale extends MainActivity {
                         beerClicks.add(0);
                         beerItem.add("test");
                         beerOnTap.add(true);
+                        beerStart.add(System.currentTimeMillis() / 1000);
+                        beerEnd.add((long) -1);
                         updateBeerList();
                     }
 
@@ -294,11 +307,12 @@ public class Sale extends MainActivity {
         File folder = new File(Environment.getExternalStorageDirectory()
                 + "/BeerPOS");
 
-        boolean var = false;
         beerName.clear();
         beerValue.clear();
         beerClicks.clear();
         beerOnTap.clear();
+        beerStart.clear();
+        beerEnd.clear();
 
         itemList.clear();
         tabAmount.clear();
@@ -324,12 +338,12 @@ public class Sale extends MainActivity {
                     // Log.d("Beer.csv","RowData: "+RowData[0]+","+RowData[1]+","+RowData[2]+","+RowData[3]);
 
                     beerName.add(index, RowData[0]);
-                    //beerName.add("test");
                     beerValue.add(index, Double.parseDouble(RowData[1]));
-                    //beerValue.add((double) 1);
                     beerClicks.add(index, Integer.parseInt(RowData[2]));
-                    //beerClicks.add(0);
                     beerOnTap.add(index, Boolean.valueOf(RowData[3]));
+                    beerStart.add(index, Long.valueOf((RowData[4])));
+                    beerEnd.add(index, Long.valueOf((RowData[5])));
+
                     beerItem.add("beer");
 
                     index++;
@@ -445,6 +459,7 @@ public class Sale extends MainActivity {
 
                         beerClicks.set(i, 0);
                         beerOnTap.set(i, false);
+                        beerEnd.set(i, System.currentTimeMillis()/1000);
                         updateBeerList();
                         break;
                     }
@@ -563,6 +578,10 @@ public class Sale extends MainActivity {
                 fw.append(beerClicks.get(i).toString());
                 fw.append(',');
                 fw.append((beerOnTap.get(i)).toString());
+                fw.append(',');
+                fw.append((beerStart.get(i)).toString());
+                fw.append(',');
+                fw.append((beerEnd.get(i)).toString());
                 fw.append('\n');
             }
         }
