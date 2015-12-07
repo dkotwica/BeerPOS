@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.os.Environment;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,8 +23,10 @@ import android.widget.NumberPicker;
 
 import android.widget.Toast;
 
+import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.api.BraintreePaymentActivity;
 import com.braintreepayments.api.PaymentRequest;
+import com.braintreepayments.api.exceptions.InvalidArgumentException;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 
 
@@ -62,6 +63,8 @@ public class Sale extends MainActivity {
     ArrayList<Double> beerValue;
     ArrayList<Integer> beerClicks;
 
+    BraintreeFragment braintree;
+
     ArrayList<String> beerItem = new ArrayList<String>();
     ArrayList<String> openTabs = new ArrayList<String>();
     // String[] beerStepValues;
@@ -84,6 +87,11 @@ public class Sale extends MainActivity {
             String number = Double.toString((double)i/2 + 1);
             beerStepValues[i] = number;
         }
+        try {
+            BraintreeFragment braintree = BraintreeFragment.newInstance(Sale.this, tokenizationKey);
+        } catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        }
         //tabAmount.add(0);
         //openTabs.add("test");
         adapter=new ArrayAdapter<String>(this,R.layout.list_item,R.id.txtview,openTabs);
@@ -104,41 +112,36 @@ public class Sale extends MainActivity {
         listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+
                 AlertDialog.Builder alertHistory = new AlertDialog.Builder(
                         Sale.this);
 
 
                 final LinearLayout historyLayout = new LinearLayout(Sale.this);
+
                 historyLayout.setOrientation(LinearLayout.VERTICAL);
                 historyLayout.addView(historyList);
-
-
 
                 alertHistory.setView(historyLayout);
 
                 alertHistory.setTitle("Tab History");
                 historyDisplay.clear();
-                for (int i = 0; i < beerHistoryClick.get(position).size(); i++) {
+                for (int i = 0; i <beerHistoryClick.get(position).size();i++) {
                     historyDisplay.add(beerName.get(beerHistoryName.get(position).get(i)) + " x " + beerHistoryClick.get(position).get(i));
                 }
                 alertHistory.setMessage(itemList.get(position));
-                alertHistory.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+
+                alertHistory.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // TODO Auto-generated method stub
-                        dialog.dismiss();
+                    public void onCancel(DialogInterface dialogInterface) {
                         historyLayout.removeView(historyList);
                     }
-
                 });
-
                 alertHistory.show();
             }
 
             ;
         });
-
-
         listV2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
@@ -300,10 +303,13 @@ public class Sale extends MainActivity {
         itemList.clear();
         tabAmount.clear();
 
+        beerHistoryClick.clear();
+        beerHistoryName.clear();
+
         beerItem.clear();
         openTabs.clear();
         if (folder.exists()) {
-        Log.d("getBeerData","Folder exists");
+            Log.d("getBeerData", "Folder exists");
 
             final String filenameBeers = folder.toString() + "/" + "BeerPOS_BEER.csv";
 
@@ -315,15 +321,15 @@ public class Sale extends MainActivity {
                 while ((line = reader.readLine()) != null) {
 
                     String[] RowData = line.split(",");
-                   // Log.d("Beer.csv","RowData: "+RowData[0]+","+RowData[1]+","+RowData[2]+","+RowData[3]);
+                    // Log.d("Beer.csv","RowData: "+RowData[0]+","+RowData[1]+","+RowData[2]+","+RowData[3]);
 
-                    beerName.add(index,RowData[0]);
+                    beerName.add(index, RowData[0]);
                     //beerName.add("test");
-                    beerValue.add(index,Double.parseDouble(RowData[1]));
+                    beerValue.add(index, Double.parseDouble(RowData[1]));
                     //beerValue.add((double) 1);
-                    beerClicks.add(index,Integer.parseInt(RowData[2]));
+                    beerClicks.add(index, Integer.parseInt(RowData[2]));
                     //beerClicks.add(0);
-                    beerOnTap.add(index,Boolean.valueOf(RowData[3]));
+                    beerOnTap.add(index, Boolean.valueOf(RowData[3]));
                     beerItem.add("beer");
 
                     index++;
@@ -350,8 +356,8 @@ public class Sale extends MainActivity {
                     itemList.add(RowData[0]);
                     //itemList.add("Dan");
                     tabAmount.add(Double.parseDouble(RowData[1]));
-                    beerHistoryClick.add(tabAmount.size()-1, new ArrayList<Integer>());
-                    beerHistoryName.add(tabAmount.size()-1, new ArrayList<Integer>());
+                    beerHistoryClick.add(tabAmount.size() - 1, new ArrayList<Integer>());
+                    beerHistoryName.add(tabAmount.size() - 1, new ArrayList<Integer>());
                     //tabAmount.add((double) 0);
                     openTabs.add("tab");
                 }
@@ -366,25 +372,48 @@ public class Sale extends MainActivity {
             }
 
         }
+
+
+
+        final String filenameHist = folder.toString() + "/" + "BeerPOS_HIST.csv";
+        FileInputStream is3 = new FileInputStream(filenameHist);
+        BufferedReader reader3 = new BufferedReader(new InputStreamReader(is3));
+        try {
+            String line;
+            while ((line = reader3.readLine()) != null) {
+                String[] RowData = line.split(",");
+                beerHistoryName.get(Integer.parseInt(RowData[0])).add(Integer.parseInt(RowData[1]));
+                beerHistoryClick.get(Integer.parseInt(RowData[0])).add(Integer.parseInt(RowData[2]));
+            }
+        } catch (IOException ex) {
+            // handle exception
+        } finally {
+            try {
+                is3.close();
+            } catch (IOException e) {
+                // handle exception
+            }
+        }
+
         updateBeerList();
         updateTabList();
     }
 
     private void updateBeerList(){
-                beerItem.clear();
-                for (int i = 0; i < beerName.size(); i++) {
-                    if(beerOnTap.get(i) == true) {
-                        beerItem.add(beerName.get(i) + "     " + "$" + beerValue.get(i) + "  Amt: " + beerClicks.get(i));
-                        //Log.d("updateBeerList_Indes", "Index: " + i);
-                    }
+        beerItem.clear();
+        for (int i = 0; i < beerName.size(); i++) {
+            if(beerOnTap.get(i) == true) {
+                beerItem.add(beerName.get(i) + "     " + "$" + beerValue.get(i) + "  Amt: " + beerClicks.get(i));
+                //Log.d("updateBeerList_Indes", "Index: " + i);
+            }
 
-                 }
+        }
         adapter1.notifyDataSetChanged();
     }
 
     //public void updateHistoryList(){
-      //  for (int i = 0; i < beerHistoryName.size(); i++) {
-        //}
+    //  for (int i = 0; i < beerHistoryName.size(); i++) {
+    //}
     //}
 
     private void updateTabList(){
@@ -493,13 +522,13 @@ public class Sale extends MainActivity {
                 updateBeerList();
             }
         });
-                alert.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // TODO Auto-generated method stub
-                        dialog.dismiss();
-                    }
-                });
+        alert.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+                dialog.dismiss();
+            }
+        });
 
         alert.show();
 
@@ -512,14 +541,14 @@ public class Sale extends MainActivity {
 
 
 
-            File folder = new File(Environment.getExternalStorageDirectory()
-                    + "/BeerPOS");
+        File folder = new File(Environment.getExternalStorageDirectory()
+                + "/BeerPOS");
 
-            boolean var = false;
-            if (!folder.exists())
-                var = folder.mkdir();
+        boolean var = false;
+        if (!folder.exists())
+            var = folder.mkdir();
 
-           final String filenameBeers = folder.toString() + "/" + "BeerPOS_BEER.csv";
+        final String filenameBeers = folder.toString() + "/" + "BeerPOS_BEER.csv";
 
 
 
@@ -558,6 +587,28 @@ public class Sale extends MainActivity {
         }
         fw.flush();
         fw.close();
+
+        final String filenameHist = folder.toString() + "/" + "BeerPOS_HIST.csv";
+
+        FileWriter fw3 = new FileWriter(filenameHist);
+        fw3.write("");
+        if(beerHistoryClick.size()>0) {
+            for (int i = 0; i < beerHistoryClick.size(); i++) {
+                if (beerHistoryName.get(i).size()>0){
+                    for (int j = 0;j < beerHistoryClick.get(i).size(); j ++){
+                        fw3.append(Integer.toString(i));
+                        fw3.append(',');
+                        fw3.append((beerHistoryName.get(i).get(j)).toString());
+                        fw3.append(',');
+                        fw3.append((beerHistoryClick.get(i).get(j)).toString());
+                        fw3.append('\n');
+                    }
+                }
+
+            }
+        }
+        fw3.flush();
+        fw3.close();
 
     }
     public void sendBeerMenu(View view) {
@@ -612,7 +663,6 @@ public class Sale extends MainActivity {
     }
 
 }
-
 
 
 
