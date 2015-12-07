@@ -78,6 +78,9 @@ public class Sale extends MainActivity {
         beerHistoryName = new ArrayList<>();
         beerHistoryClick = new ArrayList<>();
 
+        beerStart = new ArrayList<>();
+        beerEnd = new ArrayList<>();
+
         historyDisplay = new ArrayList<>();
         itemList=new ArrayList<String>();
         tabAmount=new ArrayList<Double>();
@@ -299,7 +302,6 @@ public class Sale extends MainActivity {
         File folder = new File(Environment.getExternalStorageDirectory()
                 + "/BeerPOS");
 
-        boolean var = false;
         beerName.clear();
         beerValue.clear();
         beerClicks.clear();
