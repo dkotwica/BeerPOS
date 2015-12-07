@@ -61,6 +61,9 @@ public class Sale extends MainActivity {
     ArrayList<ArrayList<Integer>> beerHistoryName;
     ArrayList<ArrayList<Integer>> beerHistoryClick;
     ArrayList<Double> beerValue;
+    ArrayList<Long> beerStart;
+    ArrayList<Long> beerEnd;
+
     ArrayList<Integer> beerClicks;
 
     BraintreeFragment braintree;
@@ -130,7 +133,7 @@ public class Sale extends MainActivity {
                                                 historyDisplay.add(beerName.get(beerHistoryName.get(position).get(i)) + " x " + beerHistoryClick.get(position).get(i));
                                              }
                                              alertHistory.setMessage(itemList.get(position));
-                                          
+
                                              alertHistory.setOnCancelListener(new DialogInterface.OnCancelListener() {
                                                  @Override
                                                  public void onCancel(DialogInterface dialogInterface) {
@@ -191,6 +194,8 @@ public class Sale extends MainActivity {
                         beerClicks.add(0);
                         beerItem.add("test");
                         beerOnTap.add(true);
+                        beerStart.add(System.currentTimeMillis() / 1000);
+                        beerEnd.add((long) -1);
                         updateBeerList();
                     }
 
@@ -299,6 +304,8 @@ public class Sale extends MainActivity {
         beerValue.clear();
         beerClicks.clear();
         beerOnTap.clear();
+        beerStart.clear();
+        beerEnd.clear();
 
         itemList.clear();
         tabAmount.clear();
@@ -324,12 +331,12 @@ public class Sale extends MainActivity {
                     // Log.d("Beer.csv","RowData: "+RowData[0]+","+RowData[1]+","+RowData[2]+","+RowData[3]);
 
                     beerName.add(index, RowData[0]);
-                    //beerName.add("test");
                     beerValue.add(index, Double.parseDouble(RowData[1]));
-                    //beerValue.add((double) 1);
                     beerClicks.add(index, Integer.parseInt(RowData[2]));
-                    //beerClicks.add(0);
                     beerOnTap.add(index, Boolean.valueOf(RowData[3]));
+                    beerStart.add(index, Long.valueOf((RowData[4])));
+                    beerEnd.add(index, Long.valueOf((RowData[5])));
+
                     beerItem.add("beer");
 
                     index++;
@@ -563,6 +570,10 @@ public class Sale extends MainActivity {
                 fw.append(beerClicks.get(i).toString());
                 fw.append(',');
                 fw.append((beerOnTap.get(i)).toString());
+                fw.append(',');
+                fw.append((beerStart.get(i)).toString());
+                fw.append(',');
+                fw.append((beerEnd.get(i)).toString());
                 fw.append('\n');
             }
         }
