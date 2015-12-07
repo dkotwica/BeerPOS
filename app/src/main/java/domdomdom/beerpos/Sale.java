@@ -82,9 +82,9 @@ public class Sale extends MainActivity {
         beerEnd = new ArrayList<>();
 
         historyDisplay = new ArrayList<>();
-        itemList=new ArrayList<String>();
-        tabAmount=new ArrayList<Double>();
-        beerName=new ArrayList<String>();
+        itemList= new ArrayList<>();
+        tabAmount= new ArrayList<>();
+        beerName= new ArrayList<>();
         beerValue=new ArrayList<>();
         beerClicks = new ArrayList<>();
         beerOnTap = new ArrayList<>();
