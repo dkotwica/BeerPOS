@@ -217,7 +217,7 @@ public class BeerData extends Stats {
     public Map<String, List<String>> getInfo() throws IOException, NoSuchFieldException, IllegalAccessException {
         Log.d("Error 12312d", "Hi");
         getBeerData();
-        double kegWeight = 59.5;
+        double kegWeight = 72.5;
         double kegPintAmount = 124;
 
         HashMap<String, List<String>> BarDetails = new HashMap<String, List<String>>();
@@ -245,9 +245,9 @@ public class BeerData extends Stats {
                 beer_name.add("Date put on tap: " + new Date(beerStart.get(i)*1000));
                 beer_name.add("Date taken off tap: " + new Date(beerEnd.get(i)*1000));
                 beer_name.add("Time taken for beer to empty: " + kegDuration + " hours");
-                beer_name.add("Average pints per hour: " + (124/kegDuration));
-                beer_name.add("Revenue generated: " + (beerValue.get(i)*124));
-                beer_name.add("Revenue per hour: " + ((beerValue.get(i)*124)/kegDuration));
+                beer_name.add("Average pints per hour: " + (124/kegDuration) + " pints");
+                beer_name.add("Revenue generated: " + "$" + (beerValue.get(i)*124));
+                beer_name.add("Revenue per hour: " + "$" + ((beerValue.get(i)*124)/kegDuration));
             }
             BarDetails.put(beerName.get(i), beer_name);
         }
