@@ -26,7 +26,8 @@ public class BeerData extends Stats {
 
     ArrayList<Double> beerValue = new ArrayList<>();
     ArrayList<Integer> beerClicks = new ArrayList<>();
-
+    ArrayList<Long> beerStart = new ArrayList<>();
+    ArrayList<Long> beerEnd = new ArrayList<>();
     ArrayList<String> storedBeer = new ArrayList<>();
 
 
@@ -77,7 +78,7 @@ public class BeerData extends Stats {
                 while ((line = reader.readLine()) != null) {
 
                     String[] RowData = line.split(",");
-                    Log.d("Beer.csv","RowData: "+RowData[0]+","+RowData[1]+","+RowData[2]+","+RowData[3]);
+                    Log.d("Beer.csv", "RowData: " + RowData[0] + "," + RowData[1] + "," + RowData[2] + "," + RowData[3]);
 
                     beerName.add(index,RowData[0]);
                     //beerName.add("test");
@@ -86,6 +87,8 @@ public class BeerData extends Stats {
                     beerClicks.add(index,Integer.parseInt(RowData[2]));
                     //beerClicks.add(0);
                     beerOnTap.add(index,Boolean.valueOf(RowData[3]));
+                    beerStart.add(index, Long.valueOf(RowData[4]));
+                    beerEnd.add(index, Long.valueOf(RowData[5]));
                     storedBeer.add("beer");
 
                     index++;
@@ -143,6 +146,10 @@ public class BeerData extends Stats {
                 fw.append(beerClicks.get(i).toString());
                 fw.append(',');
                 fw.append((beerOnTap.get(i)).toString());
+                fw.append(',');
+                fw.append((beerStart.get(i)).toString());
+                fw.append(',');
+                fw.append((beerEnd.get(i)).toString());
                 fw.append('\n');
             }
         }
@@ -152,6 +159,9 @@ public class BeerData extends Stats {
 
     public Map<String, List<String>> getInfo() throws IOException, NoSuchFieldException, IllegalAccessException {
         getBeerData();
+        double kegWeight = 59.5;
+        double kegPintAmount = 124;
+
         HashMap<String, List<String>> BarDetails = new HashMap<String, List<String>>();
 
         Log.d("Da Fuq", String.valueOf(getWeightValue()));
@@ -159,9 +169,17 @@ public class BeerData extends Stats {
 
         for(int i = 0; i < beerName.size(); i++) {
             List<String> beer_name = new ArrayList<String>();
+            beer_name.add(String.valueOf(weightValue));
 
-            //beer_name.add(String.valueOf(weightValue));
-            //beer_name.add("Time taken for beer to empty: " + beerStart - beerEnd)
+            if (beerOnTap.get(i) == true ) {
+
+            }
+            else {
+                //Doesn't take into account store hours
+                long kegDuration = ((beerStart.get(i) - beerEnd.get(i))*3600);
+                beer_name.add("Time taken for beer to empty: " + kegDuration + " hours");
+                beer_name.add("Average pints per hour: " + (weightValue/kegWeight) );
+            }
             BarDetails.put(beerName.get(i), beer_name);
         }
 
