@@ -33,6 +33,10 @@ public class beerMenu extends Sale {
     ArrayList<String> storedBeer = new ArrayList<>();
     ArrayAdapter<String> beerAdapter;
 
+    ArrayList<Long> beerStart;
+    ArrayList<Long> beerEnd;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +46,9 @@ public class beerMenu extends Sale {
         beerOnTap = new ArrayList<>();
         beerValue = new ArrayList<>();
         beerClicks = new ArrayList<>();
+        beerStart = new ArrayList<>();
+        beerEnd = new ArrayList<>();
+
 
         beerMenuList = new ArrayList<>();
         beerAdapter = new ArrayAdapter<String>(this, R.layout.beer_list_item, R.id.beerView, storedBeer);
@@ -137,7 +144,8 @@ public class beerMenu extends Sale {
         beerValue.clear();
         beerClicks.clear();
         beerOnTap.clear();
-
+        beerStart.clear();
+        beerEnd.clear();
 
         storedBeer.clear();
         if (folder.exists()) {
@@ -155,13 +163,16 @@ public class beerMenu extends Sale {
                     String[] RowData = line.split(",");
                     Log.d("Beer.csv","RowData: "+RowData[0]+","+RowData[1]+","+RowData[2]+","+RowData[3]);
 
-                    beerName.add(index,RowData[0]);
+                    beerName.add(index, RowData[0]);
                     //beerName.add("test");
                     beerValue.add(index,Double.parseDouble(RowData[1]));
                     //beerValue.add((double) 1);
                     beerClicks.add(index,Integer.parseInt(RowData[2]));
                     //beerClicks.add(0);
                     beerOnTap.add(index,Boolean.valueOf(RowData[3]));
+                    beerStart.add(index, Long.valueOf((RowData[4])));
+                    beerEnd.add(index, Long.valueOf((RowData[5])));
+
                     storedBeer.add("beer");
 
                     index++;
@@ -219,6 +230,10 @@ public class beerMenu extends Sale {
                 fw.append(beerClicks.get(i).toString());
                 fw.append(',');
                 fw.append((beerOnTap.get(i)).toString());
+                fw.append(',');
+                fw.append((beerStart.get(i)).toString());
+                fw.append(',');
+                fw.append((beerEnd.get(i)).toString());
                 fw.append('\n');
             }
         }

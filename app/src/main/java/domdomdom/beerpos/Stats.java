@@ -326,7 +326,12 @@ public class Stats extends MainActivity {
 
 
                     for (int i = 0; i < jsonWeight.length(); i++) {
-                        weightValue.set(0, jsonWeight.getJSONObject(i).getDouble("WeightValue"));
+                        if(weightValue.size() == 0){
+                            weightValue.add(jsonWeight.getJSONObject(i).getDouble("WeightValue"));
+                        }
+                        else {
+                            weightValue.set(0, jsonWeight.getJSONObject(i).getDouble("WeightValue"));
+                        }
 
                         dataList.setText("Weight Value:"+weightValue.get(0));
                     }
