@@ -13,6 +13,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
@@ -22,7 +23,12 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +52,7 @@ public class Stats extends MainActivity {
     //private static String OAUTH_SCOPE="https://www.googleapis.com/auth/urlshortener";
     //Change the Scope as you need
     private static String Token;
-    public double weightValue;
+    public ArrayList<Double> weightValue;
 
 
     WebView web;
@@ -60,11 +66,15 @@ public class Stats extends MainActivity {
     ExpandableListView Exp_list;
     BeerAdapter adapter;
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
 
+        weightValue = new ArrayList<>();
         final BeerData b = new BeerData();
         Exp_list = (ExpandableListView) findViewById(R.id.exp_list);
         try {
@@ -76,6 +86,7 @@ public class Stats extends MainActivity {
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
+
         Bar_List = new ArrayList<String>(Bar_Category.keySet());
         adapter = new BeerAdapter(this, Bar_Category, Bar_List);
         Exp_list.setAdapter(adapter);
@@ -145,7 +156,6 @@ public class Stats extends MainActivity {
         btweight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("Weight", String.valueOf(getWeightValue()));
                 new DataGet().execute();
                 try {
                     Bar_Category = b.getInfo();
@@ -156,6 +166,7 @@ public class Stats extends MainActivity {
                 } catch (NoSuchFieldException e) {
                     e.printStackTrace();
                 }
+
                 adapter.notifyDataSetChanged();
 
             }
@@ -165,13 +176,6 @@ public class Stats extends MainActivity {
 
         });
 
-    }
-    public double getWeightValue() {
-        return weightValue;
-    }
-
-    public void setWeightValue(double weightValue) {
-        this.weightValue = weightValue;
     }
 
     private class TokenGet extends AsyncTask<String, String, JSONObject> {
@@ -224,6 +228,7 @@ public class Stats extends MainActivity {
     }
     private class DataGet extends AsyncTask<String, String, JSONObject> {
         private ProgressDialog pDialog;
+
         //String Token;
         @Override
         protected void onPreExecute() {
@@ -239,14 +244,80 @@ public class Stats extends MainActivity {
         @Override
         protected JSONObject doInBackground(String... args) {
             GetData jParser = new GetData();
-            JSONObject json = jParser.getweight(DATA_URL,CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, Token, SC, SV,0);
+            JSONObject json = jParser.getweight(DATA_URL, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, Token, SC, SV, 0);
             Log.d("get data", CLIENT_ID);
             return json;
+        }
+
+        private void saveWeightData() throws IOException {
+            File folder = new File(Environment.getExternalStorageDirectory()
+                    + "/BeerPOS");
+
+            boolean var = false;
+            if (!folder.exists())
+                var = folder.mkdir();
+
+            final String filenameWeight = folder.toString() + "/" + "BeerPOS_WEIGHT.csv";
+
+
+            FileWriter fw = new FileWriter(filenameWeight);
+            fw.write("");
+            if (weightValue.size() > 0) {
+                for (int i = 0; i < weightValue.size(); i++) {
+                    fw.append((weightValue.get(i)).toString());
+                    fw.append('\n');
+                }
+            }
+            fw.flush();
+            fw.close();
+        }
+
+        private void getWeightData() throws IOException {
+            Log.d("getBeerData", "Sucessfully called the getBeerData()");
+            File folder = new File(Environment.getExternalStorageDirectory()
+                    + "/BeerPOS");
+
+            weightValue.clear();
+            if (folder.exists()) {
+                Log.d("getBeerData", "Folder exists");
+
+                final String filenameWeight = folder.toString() + "/" + "BeerPOS_WEIGHT.csv";
+
+                FileInputStream is = new FileInputStream(filenameWeight);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                try {
+                    int index = 0;
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+
+                        String[] RowData = line.split(",");
+                        // Log.d("Beer.csv","RowData: "+RowData[0]+","+RowData[1]+","+RowData[2]+","+RowData[3]);
+
+                        weightValue.add(index, Double.valueOf(RowData[0]));
+                        index++;
+
+                    }
+                } catch (IOException ex) {
+                    // handle exception
+                } finally {
+                    try {
+                        is.close();
+                    } catch (IOException e) {
+                        // handle exception
+                    }
+                }
+            }
         }
 
         @Override
         protected void onPostExecute(JSONObject json) {
             pDialog.dismiss();
+
+            try {
+                getWeightData();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             if (json != null){
 
                 try {
@@ -255,15 +326,25 @@ public class Stats extends MainActivity {
 
 
                     for (int i = 0; i < jsonWeight.length(); i++) {
-                        weightValue = jsonWeight.getJSONObject(i).getDouble("WeightValue");
+                        if(weightValue.size() == 0){
+                            weightValue.add(jsonWeight.getJSONObject(i).getDouble("WeightValue"));
+                        }
+                        else {
+                            weightValue.set(0, jsonWeight.getJSONObject(i).getDouble("WeightValue"));
+                        }
 
-                        dataList.setText("Weight Value:"+weightValue);
+                        dataList.setText("Weight Value:"+weightValue.get(0));
                     }
 
                     btweight.setText("Refresh");
 
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                try {
+                    saveWeightData();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
 

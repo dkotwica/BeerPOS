@@ -31,8 +31,7 @@ public class BeerData extends Stats {
     ArrayList<String> storedBeer = new ArrayList<>();
 
 
-
-    protected void onPause() {
+   protected void onPause() {
         super.onPause();
 
         try {
@@ -121,9 +120,6 @@ public class BeerData extends Stats {
     }
 
     private void saveBeerData() throws IOException {
-
-
-
         File folder = new File(Environment.getExternalStorageDirectory()
                 + "/BeerPOS");
 
@@ -157,14 +153,16 @@ public class BeerData extends Stats {
         fw.close();
     }
 
+
     public Map<String, List<String>> getInfo() throws IOException, NoSuchFieldException, IllegalAccessException {
+        Log.d("Error 12312d", "Hi");
         getBeerData();
         double kegWeight = 59.5;
         double kegPintAmount = 124;
 
         HashMap<String, List<String>> BarDetails = new HashMap<String, List<String>>();
 
-        Log.d("Da Fuq", String.valueOf(getWeightValue()));
+
         if (beerName.size() > 0) {
 
         for(int i = 0; i < beerName.size(); i++) {
