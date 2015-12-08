@@ -37,6 +37,7 @@ public class BeerData extends Stats {
 
         try {
             saveBeerData();
+            saveWeightData();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -47,6 +48,7 @@ public class BeerData extends Stats {
         super.onResume();
         try {
             getBeerData();
+            getWeightData();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -152,7 +154,7 @@ public class BeerData extends Stats {
                     String[] RowData = line.split(",");
                     // Log.d("Beer.csv","RowData: "+RowData[0]+","+RowData[1]+","+RowData[2]+","+RowData[3]);
 
-                    weightValue.add(index, Double.valueOf(RowData[0]));
+                    weightValue.add(Double.valueOf(RowData[0]));
                     index++;
 
                 }
@@ -224,6 +226,7 @@ public class BeerData extends Stats {
 
 
         if (beerName.size() > 0) {
+            getWeightData();
 
         for(int i = 0; i < beerName.size(); i++) {
             List<String> beer_name = new ArrayList<String>();

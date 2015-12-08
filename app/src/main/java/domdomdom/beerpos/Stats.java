@@ -116,6 +116,7 @@ public class Stats extends MainActivity {
                         super.onPageStarted(view, url, favicon);
 
                     }
+
                     String authCode;
                     @Override
                     public void onPageFinished(WebView view, String url) {
@@ -176,6 +177,89 @@ public class Stats extends MainActivity {
 
         });
 
+    }
+    protected void onPause() {
+        super.onPause();
+
+        try {
+            // saveBeerData();
+            saveWeightData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void onResume() {
+        super.onResume();
+        try {
+           // getBeerData();
+            getWeightData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    private void saveWeightData() throws IOException {
+        File folder = new File(Environment.getExternalStorageDirectory()
+                + "/BeerPOS");
+
+        boolean var = false;
+        if (!folder.exists())
+            var = folder.mkdir();
+
+        final String filenameWeight = folder.toString() + "/" + "BeerPOS_WEIGHT.csv";
+
+
+        FileWriter fw = new FileWriter(filenameWeight);
+        fw.write("");
+        if (weightValue.size() > 0) {
+            for (int i = 0; i < weightValue.size(); i++) {
+                fw.append((weightValue.get(i)).toString());
+                fw.append('\n');
+            }
+        }
+        fw.flush();
+        fw.close();
+    }
+
+    private void getWeightData() throws IOException {
+        Log.d("getBeerData", "Sucessfully called the getBeerData()");
+        File folder = new File(Environment.getExternalStorageDirectory()
+                + "/BeerPOS");
+
+        weightValue.clear();
+        if (folder.exists()) {
+            Log.d("getBeerData", "Folder exists");
+
+            final String filenameWeight = folder.toString() + "/" + "BeerPOS_WEIGHT.csv";
+
+            FileInputStream is = new FileInputStream(filenameWeight);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            try {
+                int index = 0;
+                String line;
+                while ((line = reader.readLine()) != null) {
+
+                    String[] RowData = line.split(",");
+                    // Log.d("Beer.csv","RowData: "+RowData[0]+","+RowData[1]+","+RowData[2]+","+RowData[3]);
+
+                    weightValue.add(index, Double.valueOf(RowData[0]));
+                    index++;
+
+                }
+            } catch (IOException ex) {
+                // handle exception
+            } finally {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    // handle exception
+                }
+            }
+        }
     }
 
     private class TokenGet extends AsyncTask<String, String, JSONObject> {
@@ -249,65 +333,8 @@ public class Stats extends MainActivity {
             return json;
         }
 
-        private void saveWeightData() throws IOException {
-            File folder = new File(Environment.getExternalStorageDirectory()
-                    + "/BeerPOS");
-
-            boolean var = false;
-            if (!folder.exists())
-                var = folder.mkdir();
-
-            final String filenameWeight = folder.toString() + "/" + "BeerPOS_WEIGHT.csv";
 
 
-            FileWriter fw = new FileWriter(filenameWeight);
-            fw.write("");
-            if (weightValue.size() > 0) {
-                for (int i = 0; i < weightValue.size(); i++) {
-                    fw.append((weightValue.get(i)).toString());
-                    fw.append('\n');
-                }
-            }
-            fw.flush();
-            fw.close();
-        }
-
-        private void getWeightData() throws IOException {
-            Log.d("getBeerData", "Sucessfully called the getBeerData()");
-            File folder = new File(Environment.getExternalStorageDirectory()
-                    + "/BeerPOS");
-
-            weightValue.clear();
-            if (folder.exists()) {
-                Log.d("getBeerData", "Folder exists");
-
-                final String filenameWeight = folder.toString() + "/" + "BeerPOS_WEIGHT.csv";
-
-                FileInputStream is = new FileInputStream(filenameWeight);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-                try {
-                    int index = 0;
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-
-                        String[] RowData = line.split(",");
-                        // Log.d("Beer.csv","RowData: "+RowData[0]+","+RowData[1]+","+RowData[2]+","+RowData[3]);
-
-                        weightValue.add(index, Double.valueOf(RowData[0]));
-                        index++;
-
-                    }
-                } catch (IOException ex) {
-                    // handle exception
-                } finally {
-                    try {
-                        is.close();
-                    } catch (IOException e) {
-                        // handle exception
-                    }
-                }
-            }
-        }
 
         @Override
         protected void onPostExecute(JSONObject json) {
