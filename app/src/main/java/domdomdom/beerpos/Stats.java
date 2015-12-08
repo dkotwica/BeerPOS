@@ -58,6 +58,9 @@ public class Stats extends MainActivity {
     ExpandableListView Exp_list;
     BeerAdapter adapter;
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -28,7 +28,8 @@ public class BeerData extends Sale {
 
     ArrayList<String> storedBeer = new ArrayList<>();
 
-    protected void onPause() {
+
+   protected void onPause() {
         super.onPause();
 
         try {
@@ -115,9 +116,6 @@ public class BeerData extends Sale {
     }
 
     private void saveBeerData() throws IOException {
-
-
-
         File folder = new File(Environment.getExternalStorageDirectory()
                 + "/BeerPOS");
 
@@ -147,6 +145,35 @@ public class BeerData extends Sale {
         fw.close();
     }
 
+    private void saveWeightData() throws IOException {
+        File folder = new File(Environment.getExternalStorageDirectory()
+                + "/BeerPOS");
+
+        boolean var = false;
+        if (!folder.exists())
+            var = folder.mkdir();
+
+        final String filenameWeight = folder.toString() + "/" + "BeerPOS_WEIGHT.csv";
+
+
+
+        FileWriter fw = new FileWriter(filenameWeight);
+        fw.write("");
+        if(beerClicks.size()>0) {
+            for (int i = 0; i < beerClicks.size(); i++) {
+                fw.append(beerName.get(i));
+                fw.append(',');
+                fw.append(beerValue.get(i).toString());
+                fw.append(',');
+                fw.append(beerClicks.get(i).toString());
+                fw.append(',');
+                fw.append((beerOnTap.get(i)).toString());
+                fw.append('\n');
+            }
+        }
+        fw.flush();
+        fw.close();
+    }
     public Map<String, List<String>> getInfo() throws IOException {
         Log.d("Error 12312d", "Hi");
         getBeerData();

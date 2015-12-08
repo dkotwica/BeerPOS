@@ -454,7 +454,7 @@ public class Sale extends MainActivity {
 
                         beerClicks.set(i, 0);
                         beerOnTap.set(i, false);
-                        beerEnd.set(i, System.currentTimeMillis()/1000);
+                        beerEnd.set(i, System.currentTimeMillis() / 1000);
                         updateBeerList();
                         break;
                     }
