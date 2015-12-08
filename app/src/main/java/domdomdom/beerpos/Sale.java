@@ -116,38 +116,43 @@ public class Sale extends MainActivity {
         Button btAdd=(Button)findViewById(R.id.openTab);
 
         listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                         @Override
-                                         public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 
-                                             AlertDialog.Builder alertHistory = new AlertDialog.Builder(
-                                                     Sale.this);
+            @Override
+            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+
+                AlertDialog.Builder alertHistory = new AlertDialog.Builder(
+                        Sale.this);
 
 
-                                             final LinearLayout historyLayout = new LinearLayout(Sale.this);
+                final LinearLayout historyLayout = new LinearLayout(Sale.this);
 
-                                             historyLayout.setOrientation(LinearLayout.VERTICAL);
-                                             historyLayout.addView(historyList);
+                historyLayout.setOrientation(LinearLayout.VERTICAL);
+                historyLayout.addView(historyList);
 
-                                             alertHistory.setView(historyLayout);
+                alertHistory.setView(historyLayout);
 
-                                             alertHistory.setTitle("Tab History");
-                                             historyDisplay.clear();
-                                             for (int i = 0; i <beerHistoryClick.get(position).size();i++) {
-                                                historyDisplay.add(beerName.get(beerHistoryName.get(position).get(i)) + " x " + beerHistoryClick.get(position).get(i));
-                                             }
-                                             alertHistory.setMessage(itemList.get(position));
+                alertHistory.setTitle("Tab History");
+                historyDisplay.clear();
+                for (int i = 0; i <beerHistoryClick.get(position).size();i++) {
+                    historyDisplay.add(beerName.get(beerHistoryName.get(position).get(i)) + " x " + beerHistoryClick.get(position).get(i));
+                }
+                alertHistory.setMessage(itemList.get(position));
 
-                                             alertHistory.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                                 @Override
-                                                 public void onCancel(DialogInterface dialogInterface) {
-                                                    historyLayout.removeView(historyList);
-                                                 }
-                                             });
-                                             alertHistory.show();
-                                         }
+                alertHistory.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        historyLayout.removeView(historyList);
+                    }
+                });
+                alertHistory.show();
+            }
 
-                                         ;
-                                     });
+            ;
+        });
+
+
+
+
         listV2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
@@ -391,8 +396,8 @@ public class Sale extends MainActivity {
             String line;
             while ((line = reader3.readLine()) != null) {
                 String[] RowData = line.split(",");
-               beerHistoryName.get(Integer.parseInt(RowData[0])).add(Integer.parseInt(RowData[1]));
-               beerHistoryClick.get(Integer.parseInt(RowData[0])).add(Integer.parseInt(RowData[2]));
+                beerHistoryName.get(Integer.parseInt(RowData[0])).add(Integer.parseInt(RowData[1]));
+                beerHistoryClick.get(Integer.parseInt(RowData[0])).add(Integer.parseInt(RowData[2]));
             }
         } catch (IOException ex) {
             // handle exception
@@ -409,20 +414,20 @@ public class Sale extends MainActivity {
     }
 
     private void updateBeerList(){
-                beerItem.clear();
-                for (int i = 0; i < beerName.size(); i++) {
-                    if(beerOnTap.get(i) == true) {
-                        beerItem.add(beerName.get(i) + "     " + "$" + beerValue.get(i) + "  Amt: " + beerClicks.get(i));
-                        //Log.d("updateBeerList_Indes", "Index: " + i);
-                    }
+        beerItem.clear();
+        for (int i = 0; i < beerName.size(); i++) {
+            if(beerOnTap.get(i) == true) {
+                beerItem.add(beerName.get(i) + "     " + "$" + beerValue.get(i) + "  Amt: " + beerClicks.get(i));
+                //Log.d("updateBeerList_Indes", "Index: " + i);
+            }
 
-                 }
+        }
         adapter1.notifyDataSetChanged();
     }
 
     //public void updateHistoryList(){
-      //  for (int i = 0; i < beerHistoryName.size(); i++) {
-        //}
+    //  for (int i = 0; i < beerHistoryName.size(); i++) {
+    //}
     //}
 
     private void updateTabList(){
@@ -532,13 +537,13 @@ public class Sale extends MainActivity {
                 updateBeerList();
             }
         });
-                alert.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // TODO Auto-generated method stub
-                        dialog.dismiss();
-                    }
-                });
+        alert.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+                dialog.dismiss();
+            }
+        });
 
         alert.show();
 
@@ -551,14 +556,14 @@ public class Sale extends MainActivity {
 
 
 
-            File folder = new File(Environment.getExternalStorageDirectory()
-                    + "/BeerPOS");
+        File folder = new File(Environment.getExternalStorageDirectory()
+                + "/BeerPOS");
 
-            boolean var = false;
-            if (!folder.exists())
-                var = folder.mkdir();
+        boolean var = false;
+        if (!folder.exists())
+            var = folder.mkdir();
 
-           final String filenameBeers = folder.toString() + "/" + "BeerPOS_BEER.csv";
+        final String filenameBeers = folder.toString() + "/" + "BeerPOS_BEER.csv";
 
 
 
@@ -677,7 +682,6 @@ public class Sale extends MainActivity {
     }
 
 }
-
 
 
 
