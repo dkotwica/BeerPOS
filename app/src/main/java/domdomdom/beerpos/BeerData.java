@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.TreeMap;
 /**
  * Created by domk1_000 on 3/25/2015.
  */
-public class BeerData extends Sale {
+public class BeerData extends Stats {
     ArrayList<String> beerName = new ArrayList<>();
     ArrayList<Boolean> beerOnTap = new ArrayList<>();
 
@@ -27,6 +28,8 @@ public class BeerData extends Sale {
     ArrayList<Integer> beerClicks = new ArrayList<>();
 
     ArrayList<String> storedBeer = new ArrayList<>();
+
+
 
     protected void onPause() {
         super.onPause();
@@ -147,19 +150,23 @@ public class BeerData extends Sale {
         fw.close();
     }
 
-    public Map<String, List<String>> getInfo() throws IOException {
-        Log.d("Error 12312d", "Hi");
+    public Map<String, List<String>> getInfo() throws IOException, NoSuchFieldException, IllegalAccessException {
         getBeerData();
-        Log.d("Is this it?", "Beep");
         HashMap<String, List<String>> BarDetails = new HashMap<String, List<String>>();
-        Log.d("Da Fuq", String.valueOf(beerName.size()));
+
+        Log.d("Da Fuq", String.valueOf(getWeightValue()));
         if (beerName.size() > 0) {
+
         for(int i = 0; i < beerName.size(); i++) {
             List<String> beer_name = new ArrayList<String>();
-            beer_name.add("weightValue");
+
+            //beer_name.add(String.valueOf(weightValue));
+            //beer_name.add("Time taken for beer to empty: " + beerStart - beerEnd)
             BarDetails.put(beerName.get(i), beer_name);
         }
+
         }
+
         Map<String, List<String>> treeMap = new TreeMap<String, List<String>>(BarDetails);
 
 

@@ -150,7 +150,7 @@ public class Sale extends MainActivity {
             ;
         });
 
-                                         
+
 
 
         listV2.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -46,6 +46,8 @@ public class Stats extends MainActivity {
     //private static String OAUTH_SCOPE="https://www.googleapis.com/auth/urlshortener";
     //Change the Scope as you need
     private static String Token;
+    public double weightValue;
+
 
     WebView web;
     Button auth;
@@ -63,16 +65,21 @@ public class Stats extends MainActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
 
-        BeerData b = new BeerData();
+        final BeerData b = new BeerData();
         Exp_list = (ExpandableListView) findViewById(R.id.exp_list);
         try {
             Bar_Category = b.getInfo();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
         }
         Bar_List = new ArrayList<String>(Bar_Category.keySet());
         adapter = new BeerAdapter(this, Bar_Category, Bar_List);
         Exp_list.setAdapter(adapter);
+
 
         pref = getSharedPreferences("AppPref", MODE_PRIVATE);
         Access =(TextView)findViewById(R.id.Access);
@@ -138,13 +145,33 @@ public class Stats extends MainActivity {
         btweight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("Weight", String.valueOf(getWeightValue()));
                 new DataGet().execute();
+                try {
+                    Bar_Category = b.getInfo();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (NoSuchFieldException e) {
+                    e.printStackTrace();
+                }
+                adapter.notifyDataSetChanged();
+
             }
+
 
 
 
         });
 
+    }
+    public double getWeightValue() {
+        return weightValue;
+    }
+
+    public void setWeightValue(double weightValue) {
+        this.weightValue = weightValue;
     }
 
     private class TokenGet extends AsyncTask<String, String, JSONObject> {
@@ -181,9 +208,7 @@ public class Stats extends MainActivity {
                     String refresh = json.getString("RefreshToken");
                     String userid = json.getString("UserID");
 
-                    Log.d("Token Access", Token);
-                    Log.d("Expire", expire);
-                    Log.d("Refresh", refresh);
+
                     auth.setText("Retrieved");
                     //Access.setText("Access Token:"+tok+'\n'+"Expires:"+expire+'\n'+"Refresh Token:"+refresh+'\n'+"User ID: "+userid);
                 } catch (JSONException e) {
@@ -227,21 +252,16 @@ public class Stats extends MainActivity {
                 try {
                     JSONObject jsonDataList = new JSONObject(json.toString());
                     JSONArray jsonWeight = jsonDataList.getJSONArray("WeightDataList");
-                    double weightValue = 0;
+
 
                     for (int i = 0; i < jsonWeight.length(); i++) {
-                        double weightCounter = jsonWeight.getJSONObject(i).getDouble("WeightValue");
-                        weightValue = weightValue+=weightCounter;
-                        dataList.setText("Weight Value:"+weightValue/(i+1));
+                        weightValue = jsonWeight.getJSONObject(i).getDouble("WeightValue");
+
+                        dataList.setText("Weight Value:"+weightValue);
                     }
-                    //double weightValue = jsonWeight.getJSONObject(0).getDouble("WeightValue");
 
-                    //String weightVal = String.valueOf(weightValue);
+                    btweight.setText("Refresh");
 
-                    //String weightValue = json.getString("WeightDataList");
-                    //Log.d("Weight", String.valueOf(json));
-                    btweight.setText("Updated");
-                    //dataList.setText("Weight Value:"+weightValue);
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
