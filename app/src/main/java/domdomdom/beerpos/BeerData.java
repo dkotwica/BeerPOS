@@ -147,7 +147,7 @@ public class BeerData extends Stats {
     }
 
 
-    public Map<String, List<String>> getInfo() throws IOException {
+    public Map<String, List<String>> getInfo() throws IOException, NoSuchFieldException, IllegalAccessException {
         Log.d("Error 12312d", "Hi");
         getBeerData();
         HashMap<String, List<String>> BarDetails = new HashMap<String, List<String>>();

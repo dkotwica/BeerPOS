@@ -74,8 +74,12 @@ public class Stats extends MainActivity {
             Bar_Category = b.getInfo();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
         }
-        
+
         Bar_List = new ArrayList<String>(Bar_Category.keySet());
         adapter = new BeerAdapter(this, Bar_Category, Bar_List);
         Exp_list.setAdapter(adapter);
@@ -150,6 +154,10 @@ public class Stats extends MainActivity {
                 try {
                     Bar_Category = b.getInfo();
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (NoSuchFieldException e) {
                     e.printStackTrace();
                 }
 
