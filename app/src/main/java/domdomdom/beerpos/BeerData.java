@@ -152,7 +152,7 @@ public class BeerData extends Stats {
         getBeerData();
         HashMap<String, List<String>> BarDetails = new HashMap<String, List<String>>();
 
-        Log.d("Da Fuq", String.valueOf(getWeightValue()));
+
         if (beerName.size() > 0) {
 
         for(int i = 0; i < beerName.size(); i++) {
