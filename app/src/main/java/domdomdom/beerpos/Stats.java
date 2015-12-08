@@ -239,7 +239,7 @@ public class Stats extends MainActivity {
         @Override
         protected JSONObject doInBackground(String... args) {
             GetData jParser = new GetData();
-            JSONObject json = jParser.getweight(DATA_URL,CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, Token, SC, SV);
+            JSONObject json = jParser.getweight(DATA_URL,CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, Token, SC, SV,0);
             Log.d("get data", CLIENT_ID);
             return json;
         }
